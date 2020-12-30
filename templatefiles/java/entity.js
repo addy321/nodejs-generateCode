@@ -1,59 +1,21 @@
 
-exports.model = function(entityName,语言){
+module.exports = function(entityobj){
     var util = require('../utils/TypeConversion')
     var tool = require('../utils/tool')
 
-    // 拿到所有字段
-    var fields = entity.fields
- 
-    // 首字母转大写 把表名转成实体类
 
-    if (suffix == '.cs') {
-        
-        // 所有字段拼接
-        var fieldtext = ''
-        fields.forEach(fieldObje => {
-            fieldtext += `
-        /// <summary>
-        /// ${fieldObje.字段说明}
-        /// </summary>
-        [Column("${fieldObje.字段名}")]
-        public ${util.typeTostring(fieldObje.字段类型,suffix)} ${tool.toHump(fieldObje.字段名)} { get; set; }
-    
-    `
-        });
-        return `
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-namespace Coldairarrow.Entity.Video
-{
-    /// <summary>
-    /// ${entity.tablePrompt}
-    /// </summary>
-    [Table("${entity.tableName}")]
-    public class ${entityName}
-    {
-        ${fieldtext}
-    }
-}
-`
-    }
-
-    if (suffix == '.java') {
-
-        // 所有字段拼接
-        var fieldtext1 = ''
-        var fieldtext2 = ''
-        var fieldtext3 = ''
+    // 所有字段拼接
+    var fieldtext1 = ''
+    var fieldtext2 = ''
+    var fieldtext3 = ''
         fieldtext3 += ` 
     @Override
     public String toString() {
-        return "${entity.name}[` 
+        return "${entityobj.className}[` 
 
-        fields.forEach(fieldObje => {
+        entityobj.fields.forEach(fieldObje => {
         // 获取类型
-        var fieldString = util.typeTostring(fieldObje.字段类型,suffix)
+        var fieldString = util.typeTostring(fieldObje.字段类型,entityobj.type)
         
         //拼接字段
             fieldtext1 += `
@@ -90,6 +52,5 @@ public class ${entityName}  extends BaseDomain{
     
 }
         `
-    }
 
 }

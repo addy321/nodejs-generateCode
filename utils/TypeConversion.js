@@ -6,8 +6,7 @@ typeText = 数据的类型
 type = 语言类型
  */
 exports.typeTostring = function(typeText,type){
-
-    if(type == '.java'){
+    if(type == 'java'){
         if(typeText.indexOf('decimal') != -1){
             return "double"
         }
@@ -19,7 +18,7 @@ exports.typeTostring = function(typeText,type){
         }
     }
 
-    if(type == '.cs'){
+    if(type == 'c#'){
         if(typeText.indexOf('decimal') != -1){
             return "decimal"
         }

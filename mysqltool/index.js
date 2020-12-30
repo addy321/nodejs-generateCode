@@ -3,14 +3,35 @@ var filetool = require('../file/index')
 var entitymodel = require('../templatefiles/entity')
 var daomodel = require('../templatefiles/ibusiness')
 var tool = require('../utils/tool')
+var getdir = require('../utils/load_dir')
 
-
-// 数据名字
-var mysqldb = 'NewProject'
-// 生成文件的类型
-var fileType = ['entity', 'IBusiness', 'Business', 'controller', 'vue']
-// 生成文件的后缀
-var files = ['.java', '.cs']
+var fileobje = {
+    //数据名字
+    mysqldb: 'NewProject',
+    // 生成语言
+    languages: [
+        {
+            语言: 'java',
+            文件后缀: '.java',
+            生成的类型: ['entity', 'dao', 'Service', 'ServiceImpl', 'Controller']
+        },
+        {
+            语言: 'c#',
+            文件后缀: '.cs',
+            生成的类型: ['entity', 'IBusiness', 'Business', 'Controller']
+        },
+        {
+            语言: 'html',
+            文件后缀: '.html',
+            生成的类型: ['list', 'add', 'update', 'delete']
+        },
+        {
+            语言: 'vue',
+            文件后缀: '.vue',
+            生成的类型: ['list', 'add', 'update', 'delete']
+        },
+    ]
+}
 
 
 function main_a() {
@@ -30,7 +51,7 @@ FROM
 information_schema. TABLES a
 LEFT JOIN information_schema. COLUMNS b ON a.table_name = b.TABLE_NAME
 WHERE
-b.table_schema = '${mysqldb}'
+b.table_schema = '${fileobje.mysqldb}'
 ORDER BY
 a.table_name`)
     return data
@@ -44,74 +65,67 @@ function getTABLE() {
     FROM
     information_schema. TABLES a
     WHERE
-    a.table_schema = '${mysqldb}'`)
+    a.table_schema = '${fileobje.mysqldb}'`)
     data.then((tableRES) => {
         getZD().then((fieldRES) => {
             // 遍历所有表
             for (var index in tableRES) {
-                // 遍历所有创建文件的类型
-                fileType.forEach(type => {
-                    createEntity(tableRES[index].表名, tableRES[index].表说明, type, fieldRES)
+                // 获取当前表的字段
+                var data = []
+                fieldRES.forEach(field => {
+                    if (field.表名 == tableRES[index].表名) {
+                        data.push(field)
+                    }
+                    createEntity(field.表名, tableRES[index].表说明, data)
                 })
             }
         }).catch((err) => {
             console.log(err)
-            console.log("读取数据库的所有字段失败")
+            console.log("失败")
         })
     }).catch((err) => {
-        console.log("读取数据库的所有表名失败")
+        console.log("失败")
     })
 }
 
-function createEntity(tableName, tablePrompt, type, fields) {
-    //console.log("-----------"+tableName, tablePrompt, filetype)
-    var data = []
-    fields.forEach(field => {
-        if (field.表名 == tableName) {
-            data.push(field)
+/**
+ * tableName = 表名
+ * tablePrompt = 表说明
+ * fields = 表中字段
+ */
+function createEntity(tableName, tablePrompt, fields) {
+    fileobje.languages.forEach(item => {
+        //创建实体类需要用到的参数
+        var entityobj = {
+            fields: fields,
+            tableName: tableName,
+            tablePrompt: tablePrompt,
+            className: tool.首字母转大写(tool.toHump(tableName)),
+            type: item.语言,
+            idobj: tool.getId(fields, tableName)
         }
+
+        console.log(entityobj)
+
+        item.生成的类型.forEach(type => {
+            var model = getdir(item.语言 + '\\' + type,type)
+            if (model) {
+                console.log(model)
+                var text = model(entityobj)
+                filetool.createFile(matchType(entityobj.className), text, item.文件后缀, item.语言 + "/" + type)
+            }
+        })
+
     })
-
-    //创建实体类需要用到的参数
-    var entityobj = {
-        fields: data,
-        name: tableName,
-        tableName: tableName,
-        tablePrompt: tablePrompt
-    }
-    console.log(tableName+'------------')
-    tableName = tool.首字母转大写(tool.toHump(tableName))
-    if (type == 'entity') {
-        // 拼接内容
-        files.forEach(suffix => {
-            var text = entitymodel.model(tableName,entityobj,suffix)
-            if(suffix == '.java'){
-                filetool.createFile(tableName, text, suffix,"entity/java")
-            }
-            if(suffix == '.cs'){
-                filetool.createFile(tableName, text, suffix,"entity/c#")
-            }
-        })
-    }
-    if(type == 'IBusiness'){
-         // 拼接内容
-         files.forEach(suffix => {
-            console.log(tableName)
-            var text = daomodel.model(tableName,entityobj,suffix)
-            if(suffix == '.cs'){
-                var entityName ='I'+tableName+'Business'
-                filetool.createFile(entityName, text, suffix,'IBusiness')
-            }
-            if(suffix == '.java'){
-                var entityName = tableName +'Dao'
-                filetool.createFile(entityName, text, suffix,'dao')
-            }
-        })
-    }
-    if(type == 'Business'){
-
-    }
 }
+
+function matchType(type, className) {
+    if ("IBusiness" == type) {
+        return "I" + className + "Business"
+    }
+    return className
+}
+
 
 
 module.exports = {
