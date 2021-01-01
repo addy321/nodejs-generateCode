@@ -1,6 +1,6 @@
 
 exports.model = function(entityName,语言){
-    var util = require('../utils/TypeConversion')
+    var typeTostring = require('../utils/TypeConversion')
     var tool = require('../utils/tool')
 
     // 拿到所有字段
@@ -18,7 +18,7 @@ exports.model = function(entityName,语言){
         /// ${fieldObje.字段说明}
         /// </summary>
         [Column("${fieldObje.字段名}")]
-        public ${util.typeTostring(fieldObje.字段类型,suffix)} ${tool.toHump(fieldObje.字段名)} { get; set; }
+        public ${typeTostring(fieldObje.字段类型,suffix)} ${tool.toHump(fieldObje.字段名)} { get; set; }
     
     `
         });

@@ -1,7 +1,5 @@
 var db = require('../db/dbConfig')
 var filetool = require('../file/index')
-var entitymodel = require('../templatefiles/entity')
-var daomodel = require('../templatefiles/ibusiness')
 var tool = require('../utils/tool')
 var getdir = require('../utils/load_dir')
 
@@ -28,7 +26,7 @@ var fileobje = {
         {
             语言: 'vue',
             文件后缀: '.vue',
-            生成的类型: ['list', 'add', 'update', 'delete']
+            生成的类型: ['List', 'EditForm', 'update', 'delete']
         },
     ]
 }
@@ -71,13 +69,13 @@ function getTABLE() {
             // 遍历所有表
             for (var index in tableRES) {
                 // 获取当前表的字段
-                var data = []
+                var fields = []
                 fieldRES.forEach(field => {
                     if (field.表名 == tableRES[index].表名) {
-                        data.push(field)
+                        fields.push(field)
                     }
-                    createEntity(field.表名, tableRES[index].表说明, data)
                 })
+                createEntity(tableRES[index].表名, tableRES[index].表说明, fields)
             }
         }).catch((err) => {
             console.log(err)
@@ -102,28 +100,34 @@ function createEntity(tableName, tablePrompt, fields) {
             tablePrompt: tablePrompt,
             className: tool.首字母转大写(tool.toHump(tableName)),
             type: item.语言,
-            idobj: tool.getId(fields, tableName)
+            idobj: tool.getId(fields, tableName),
+            package: 'CMSIBusiness'
         }
-
-        console.log(entityobj)
-
-        item.生成的类型.forEach(type => {
-            var model = getdir(item.语言 + '\\' + type,type)
-            if (model) {
-                console.log(model)
-                var text = model(entityobj)
-                filetool.createFile(matchType(entityobj.className), text, item.文件后缀, item.语言 + "/" + type)
-            }
+        item.生成的类型.forEach(filetype => {
+            var res = getdir(item.语言 + '\\' + filetype)
+            res.then((fun) => {
+                if (fun) {
+                    var text = fun(entityobj)
+                    filetool.createFile(matchType(filetype, entityobj.className), text, item.文件后缀, item.语言 + "/" + filetype)
+                }
+            }).catch((err) => {
+                console.log(err)
+                console.log(item.语言 + "未配置" + filetype + "模板")
+            })
         })
 
     })
 }
 
 function matchType(type, className) {
+    className = tool.首字母转大写(className)
     if ("IBusiness" == type) {
         return "I" + className + "Business"
     }
-    return className
+    if ("entity" == type) {
+        return className
+    }
+    return className + tool.首字母转大写(type)
 }
 
 

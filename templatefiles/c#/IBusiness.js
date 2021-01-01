@@ -4,18 +4,17 @@
 entity = 数据库字段和表消息
 entityobj.type = 语言类型（文件的后缀）
  */
-exports.model = function (entityobj) {
+module.exports = function(entityobj){
 
-    var typeTostring = require('../utils/TypeConversion')
-    var tool = require('../utils/tool')
+    var typeTostring = require('../../utils/TypeConversion')
 
     var entityName = entityobj.className
     // 获取主键字段和类型 
     // 转换类型
-    var IdType = typeTostring.typeTostring(entityobj.idobj.字段类型,entityobj.type)
+    var IdType = typeTostring(entityobj.idobj.字段类型,entityobj.type)
     
             return `
-using Coldairarrow.Entity.Video;
+using Coldairarrow.Entity.Entity;
 using Coldairarrow.Util;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coldairarrow.IBusiness.Video
+namespace Coldairarrow.IBusiness.${entityobj.package}
 {
     public interface I${entityName}Business
     {
@@ -31,15 +30,14 @@ namespace Coldairarrow.IBusiness.Video
         /// 列表(分页查询)
         /// </summary>
         /// <param name="input">分页参数</param>
-        /// <param name="CompanyStyle">字段</param>
         /// <returns></returns>
-        Task<List<${entityName}>> GetDataList(PageInput<${entityName}> input, string CompanyStyle);
+        Task<PageResult<${entityName}>> GetDataList(PageInput input);
         /// <summary>
         /// 获取详情
         /// </summary>
-        /// <param name="${idobj.字段名}">主键</param>
+        /// <param name="${entityobj.idobj.字段名}">主键</param>
         /// <returns></returns>
-        Task<${entityName}> GetTheData(${IdType} ${idobj.字段名});
+        Task<${entityName}> GetTheData(${IdType} ${entityobj.idobj.字段名});
 
         /// <summary>
         /// 新增

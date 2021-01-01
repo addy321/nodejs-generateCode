@@ -14,7 +14,7 @@ exports.model = function (entityName,entity, suffix) {
     // 获取主键字段和类型
     var idobj = tool.getId(fields,entity.name)
     // 转换类型
-    var IdType = typeTostring.typeTostring(idobj.字段类型,suffix)
+    var IdType = typeTostring(idobj.字段类型,suffix)
     
         if (suffix == '.cs') {
             

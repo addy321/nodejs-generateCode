@@ -1,9 +1,11 @@
 
+
+
 module.exports = function(entityobj){
-    var util = require('../utils/TypeConversion')
-    var tool = require('../utils/tool')
 
-
+    var typeTostring = require('../../utils/TypeConversion')
+    var tool = require('../../utils/tool')
+    
     // 所有字段拼接
     var fieldtext1 = ''
     var fieldtext2 = ''
@@ -15,11 +17,11 @@ module.exports = function(entityobj){
 
         entityobj.fields.forEach(fieldObje => {
         // 获取类型
-        var fieldString = util.typeTostring(fieldObje.字段类型,entityobj.type)
+        var fieldString = typeTostring(fieldObje.字段类型,entityobj.type)
         
         //拼接字段
             fieldtext1 += `
-    //${entity.tablePrompt}
+    //${fieldObje.字段说明}
     private ${fieldString} ${tool.toHump(fieldObje.字段名)};
         `
         // getset 方法拼接
@@ -43,9 +45,9 @@ module.exports = function(entityobj){
 
         return `
 package entity;
-// ${entity.tablePrompt}
-public class ${entityName}  extends BaseDomain{
-    public ${entityName}() {
+// ${entityobj.tablePrompt}
+public class ${entityobj.className}  extends BaseDomain{
+    public ${entityobj.className}() {
 
     }
     ${fieldtext1+fieldtext2+fieldtext3}

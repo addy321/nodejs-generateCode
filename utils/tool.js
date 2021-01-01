@@ -18,8 +18,7 @@ function getId(array, tableName) {
 str = 字符串
  */
 function 首字母转大写(str) {
-    str += ''
-    newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+    newStr = str.slice(0, 1).toUpperCase() + str.slice(1);
     return newStr;
 }
 /*
@@ -45,9 +44,10 @@ function 字符串去除最后一个字符(text) {
 
 // 下划线转换驼峰
 function toHump(name) {
-    return name.replace(/\_(\w)/g, function(all, letter){
+    var text = name.replace(/\_(\w)/g, function(all, letter){
         return letter.toUpperCase();
     });
+    return text
 }
 
 
