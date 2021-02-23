@@ -14,30 +14,30 @@ module.exports = function(entityobj){
     var set字符拼接 =''
 
     entityobj.fields.forEach(字段=>{
-                var 大写开头字段 = tool.首字母转大写(字段.字段名)
-                字段字符拼接+=字段.字段名+','
+                var 大写开头字段 = tool.首字母转大写(字段.COLUMN_NAME)
+                字段字符拼接+=字段.COLUMN_NAME+','
                 映射字段字符拼接+=`
         values.add(object.get${大写开头字段}());`
                 问号 +='?,'
                 修改字符 += `
         if(data.get${大写开头字段}()!=null && !"".equals(data.getName())){
-            sql.append("${字段.字段名}=?,");
+            sql.append("${字段.COLUMN_NAME}=?,");
             values.add(data.get${大写开头字段}());
         }
                 `
                 set字符拼接 +=`
-            data.set${字段.字段名}(rs.get${大写开头字段}("${字段.字段名}"));`
+            data.set${字段.COLUMN_NAME}(rs.get${大写开头字段}("${字段.COLUMN_NAME}"));`
             })
             字段字符拼接 = tool.字符串去除最后一个字符(字段字符拼接)
             问号 = tool.字符串去除最后一个字符(问号)
     
             
     var 是否添加操作时间 = false
-    var idobj = entityobj.idobj
-    var IdType = typeTostring(idobj.字段类型,entityobj.type)
+    var idobj = entityobj.PRI
+    var IdType = typeTostring(idobj.DATA_TYPE,entityobj.type)
 
             return `
-package dao;
+${entityobj.packageName}
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -65,10 +65,10 @@ public class ${entityName}Dao extends daoTemplate implements pojoDao<${entityNam
     }
 
     @Override
-    public int delete(${IdType} ${idobj.字段名}) throws Exception {
-        String sql="delete from ${entityobj.tableName} where ${idobj.字段名}=?";
+    public int delete(${IdType} ${idobj.COLUMN_NAME}) throws Exception {
+        String sql="delete from ${entityobj.tableName} where ${idobj.COLUMN_NAME}=?";
         List<Object> values=new ArrayList<Object>(1);
-            values.add(${idobj.字段名});
+            values.add(${idobj.COLUMN_NAME});
         return executeUpdate(sql, values);
     }
 
@@ -81,8 +81,8 @@ public class ${entityName}Dao extends daoTemplate implements pojoDao<${entityNam
         sql.append("操作时间=?");
         values.add(new Date());`:''}
         
-        sql.append(" where ${idobj.字段名}=?");
-        values.add(stu.get${tool.首字母转大写(idobj.字段名)}());
+        sql.append(" where ${idobj.COLUMN_NAME}=?");
+        values.add(stu.get${tool.首字母转大写(idobj.COLUMN_NAME)}());
         
         return executeUpdate(sql.toString(), values);
     }
@@ -127,8 +127,6 @@ public class ${entityName}Dao extends daoTemplate implements pojoDao<${entityNam
         }
         return countQuery(sql, values);
     }
-
 }
-            
             `
 }

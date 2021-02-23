@@ -12,7 +12,7 @@ var load = function (path, name) {
 };
 
 module.exports = function (dir) {
-    var url = process.cwd() + '\\templatefiles\\' + dir + '.js'
+    var url = process.cwd() +"\\"+ dir + '.js'
     return new Promise(
         (complete, fail) =>
             fs.access(url, fs.R_OK | fs.W_OK, (err) =>

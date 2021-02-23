@@ -17,24 +17,24 @@ module.exports = function(entityobj){
 
         entityobj.fields.forEach(fieldObje => {
         // 获取类型
-        var fieldString = typeTostring(fieldObje.字段类型,entityobj.type)
+        var fieldString = typeTostring(fieldObje.DATA_TYPE,entityobj.type)
         
         //拼接字段
             fieldtext1 += `
-    //${fieldObje.字段说明}
-    private ${fieldString} ${tool.toHump(fieldObje.字段名)};
+    //${fieldObje.COLUMN_COMMENT}
+    private ${fieldString} ${tool.toHump(fieldObje.COLUMN_NAME)};
         `
         // getset 方法拼接
         fieldtext2 += `
-    public ${fieldString} get${tool.toHump(tool.toHump(tool.首字母转大写(fieldObje.字段名)))}() {
-        return ${tool.toHump(tool.首字母转大写(fieldObje.字段名))};
+    public ${fieldString} get${tool.toHump(tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME)))}() {
+        return ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))};
     }
-    public void set${tool.toHump(tool.首字母转大写(fieldObje.字段名))}(${fieldString} ${tool.toHump(tool.首字母转大写(fieldObje.字段名))}) {
-        this.${tool.toHump(tool.首字母转大写(fieldObje.字段名))} = ${tool.toHump(tool.首字母转大写(fieldObje.字段名))};
+    public void set${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))}(${fieldString} ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))}) {
+        this.${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))} = ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))};
     }
             `
         // tostring 方法拼接
-        fieldtext3 += `${tool.toHump(fieldObje.字段名)}=" + ${tool.toHump(fieldObje.字段名)} + ",`
+        fieldtext3 += `${tool.toHump(fieldObje.COLUMN_NAME)}=" + ${tool.toHump(fieldObje.COLUMN_NAME)} + ",`
 
         });
 
@@ -42,10 +42,9 @@ module.exports = function(entityobj){
         fieldtext3+=`]";
     }
         `
-
-        return `
-package entity;
-// ${entityobj.tablePrompt}
+    var fileText = `
+${entityobj.packageName}
+// ${entityobj.classCaption}
 public class ${entityobj.className}  extends BaseDomain{
     public ${entityobj.className}() {
 
@@ -53,6 +52,7 @@ public class ${entityobj.className}  extends BaseDomain{
     ${fieldtext1+fieldtext2+fieldtext3}
     
 }
-        `
+    `
+        return  fileText
 
 }

@@ -1,90 +1,104 @@
-var db = require('../db/dbConfig')
 var filetool = require('../file/index')
 var tool = require('../utils/tool')
 var getdir = require('../utils/load_dir')
-
-var fileobje = {
-    //数据名字
-    mysqldb: 'NewProject',
-    // 生成语言
-    languages: [
-        {
-            语言: 'java',
-            文件后缀: '.java',
-            生成的类型: ['entity', 'dao', 'Service', 'ServiceImpl', 'Controller']
-        },
-        {
-            语言: 'c#',
-            文件后缀: '.cs',
-            生成的类型: ['entity', 'IBusiness', 'Business', 'Controller']
-        },
-        {
-            语言: 'html',
-            文件后缀: '.html',
-            生成的类型: ['list', 'add', 'update', 'delete']
-        },
-        {
-            语言: 'vue',
-            文件后缀: '.vue',
-            生成的类型: ['List', 'EditForm', 'update', 'delete']
-        },
-    ]
-}
+var connectquery = require('./connectquery')
+var fs = require('fs')
 
 
+// 生成语言
+var languages = [
+    {
+        name: 'java',
+        status: true,
+        filetype: [1,2]
+    },
+    {
+        name: 'c#',
+        status: false,
+        filetype: 1
+    },
+    {
+        name: 'vue',
+        status: false,
+        filetype: 1
+    },
+    {
+        name: 'html',
+        status: false,
+        filetype: 1
+    },
+]
+
+/*
+查询要生成的类型
+ */
 function main_a() {
-    getTABLE()
-}
+    fs.readFile(__dirname + '/filejson.json', 'utf8', function (err, data) {
+        if (err) console.log(err);
+        var fileTypes = JSON.parse(data);//读取的值
 
-// 获取所有字段
-function getZD() {
-    var data = db.querySql(`SELECT
-a.table_name 表名,
-a.table_comment 表说明,
-b.COLUMN_NAME 字段名,
-b.column_comment 字段说明,
-b.column_type 字段类型,
-b.column_key 约束 
-FROM
-information_schema. TABLES a
-LEFT JOIN information_schema. COLUMNS b ON a.table_name = b.TABLE_NAME
-WHERE
-b.table_schema = '${fileobje.mysqldb}'
-ORDER BY
-a.table_name`)
-    return data
-}
+        var templates = []
 
-// 获取所有表明明
-function getTABLE() {
-    var data = db.querySql(`SELECT
-    a.table_name 表名,
-    a.table_comment 表说明
-    FROM
-    information_schema. TABLES a
-    WHERE
-    a.table_schema = '${fileobje.mysqldb}'`)
-    data.then((tableRES) => {
-        getZD().then((fieldRES) => {
-            // 遍历所有表
-            for (var index in tableRES) {
-                // 获取当前表的字段
-                var fields = []
-                fieldRES.forEach(field => {
-                    if (field.表名 == tableRES[index].表名) {
-                        fields.push(field)
+        languages.forEach(x=>{
+            if(x.status == false) return
+            console.log(x)
+            x.filetype.forEach(typeid=>{
+                fileTypes.forEach(f=>{
+                    if(typeid == f.id) {
+                        templates.push(f)
                     }
                 })
-                createEntity(tableRES[index].表名, tableRES[index].表说明, fields)
-            }
-        }).catch((err) => {
-            console.log(err)
-            console.log("失败")
+            })
         })
-    }).catch((err) => {
-        console.log("失败")
+        console.log("要生成的模板>>>>>>>>>>>")
+        console.log(templates)
+        queryMysql(templates)
+    });
+}
+
+/**
+ * msyql 生成文件
+ * @param {[]} templates 生产的模板信息
+ */
+function queryMysql(templates) {
+    // 所有表名和注释
+    connectquery.MysqlallTable(tables => {
+        tables.forEach(table => {
+            // 查询表下面的所有字段信息
+            connectquery.MysqlallField(table.tableName, fieids => {
+                outputFile(table, fieids,templates)
+            })
+        })
     })
 }
+
+/**
+ * 
+ * @param {{}} table 表的信息
+ * @param {[]} fieids  表中字段信息
+ * @param {[]} templates  生成模板
+ */
+function outputFile(table,fieids,templates){
+    templates.forEach(t=>{
+        var fileobje ={
+            className:tool.首字母转大写(table.tableName)+t.addtext, // 类名
+            classCaption:table.tableDirections, // 类注释
+            packageName:t.packageName, // 包名
+            PRI:tool.getPRI(fieids), //主键字段信息
+            fields:fieids,  // 所有字段 [] 数组形式
+            type:t.type // 语言
+        }
+        var res = getdir(t.path)
+        res.then((fun) => {
+            var text = fun(fileobje) // 调用模板生成字符串
+            filetool.createFile(text,t.Pathdiameter,fileobje.className+t.addtext,t.suffix) // 生成文件
+        }).catch((err) => {
+            console.log(err)
+            console.log(t.path + "生成时发生错误")
+        })
+    })
+}
+
 
 /**
  * tableName = 表名
@@ -108,7 +122,7 @@ function createEntity(tableName, tablePrompt, fields) {
             res.then((fun) => {
                 if (fun) {
                     var text = fun(entityobj)
-                    filetool.createFile(matchType(filetype, entityobj.className), text, item.文件后缀, item.语言 + "/" + filetype)
+                    filetool.createFile(matchType(filetype, entityobj.className, item.文件不追加类型), text, item.文件后缀, item.语言 + "/" + filetype)
                 }
             }).catch((err) => {
                 console.log(err)
@@ -119,12 +133,15 @@ function createEntity(tableName, tablePrompt, fields) {
     })
 }
 
-function matchType(type, className) {
+function matchType(type, className, isaddtype) {
     className = tool.首字母转大写(className)
     if ("IBusiness" == type) {
         return "I" + className + "Business"
     }
     if ("entity" == type) {
+        return className
+    }
+    if (isaddtype === true) {
         return className
     }
     return className + tool.首字母转大写(type)

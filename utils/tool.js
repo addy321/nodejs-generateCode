@@ -5,9 +5,9 @@ array = 所有字段
 tableName = 表名
 用于mysql
  */
-function getId(array, tableName) {
+function getPRI(array) {
     for (var i in array) {
-        if (array[i].约束.indexOf('PRI') != -1 && array[i].表名.indexOf(tableName) != -1) {
+        if (array[i].COLUMN_KEY.indexOf('PRI') != -1) {
             return array[i]
         }
     }
@@ -44,13 +44,16 @@ function 字符串去除最后一个字符(text) {
 
 // 下划线转换驼峰
 function toHump(name) {
-    var text = name.replace(/\_(\w)/g, function(all, letter){
-        return letter.toUpperCase();
-    });
+    var text = name
+    if(text.indexOf('_') != -1){
+        text = name.replace(/\_(\w)/g, function(all, letter){
+            return letter.toUpperCase();
+        });
+    }
     return text
 }
 
 
 module.exports = {
-    getId, 首字母转大写, 根据表名或者表下面的所有字段, 字符串去除最后一个字符,toHump
+    getPRI, 首字母转大写, 根据表名或者表下面的所有字段, 字符串去除最后一个字符,toHump
 }

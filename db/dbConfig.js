@@ -2,11 +2,11 @@ var mysql = require('mysql')
 
 var mysqlConfig = {
     connectionLimit: 10,    // 连接数量
-    host: '192.168.31.226',
+    host: '127.0.0.1',
     user: 'root',
-    password: '0C7kaPl0R1EKaxHl',
-    port: '3308',
-    database: 'NewProject'
+    password: '1234',
+    port: '3306',
+    database: 'jdbcproject'
 }
 // 创建mysql 连接池
 var pool = mysql.createPool(mysqlConfig)
@@ -18,8 +18,6 @@ function querySql(sql, param) {
             if (err) {
                 reject(err)
             } else {
-                console.log(sql)
-                console.log('---------------------------')
                 connection.query({ sql: sql, timeout: 3000 }, param, (err, result) => {
                     if (err) {
                         reject(err)
@@ -36,5 +34,5 @@ function querySql(sql, param) {
 }
 
 module.exports = {
-    querySql
+    querySql,mysqlConfig
 }

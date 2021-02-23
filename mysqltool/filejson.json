@@ -1,0 +1,52 @@
+[
+    {
+        "id":1,
+        "name":"javaEntity",
+        "suffix":".java",
+        "addtext":"",
+        "path":"templatefiles/java/entity",
+        "packageName":"package com.jbit.entity;",
+        "type":"java",
+        "Pathdiameter":"F:\\wd\\node\\produce\\filedata"
+    },
+    {
+        "id":2,
+        "name":"javaDao",
+        "suffix":".java",
+        "addtext":"Dao",
+        "path":"templatefiles/java/dao",
+        "packageName":"package com.jbit.entity;",
+        "type":"java",
+        "Pathdiameter":"F:\\wd\\node\\produce\\filedata"
+    },
+    {
+        "id":3,
+        "name":"javaService",
+        "suffix":".java",
+        "addtext":"service",
+        "path":"templatefiles/java/service",
+        "packageName":"package com.jbit.entity;",
+        "type":"java",
+        "Pathdiameter":"F:\\wd\\node\\produce\\filedata"
+    },
+    {
+        "id":4,
+        "name":"javaServiceimpl",
+        "suffix":".java",
+        "addtext":"serviceimpl",
+        "path":"templatefiles/java/serviceimpl",
+        "packageName":"package com.jbit.entity;",
+        "type":"java",
+        "Pathdiameter":"F:\\wd\\node\\produce\\filedata"
+    },
+    {
+        "id":5,
+        "name":"javaController",
+        "suffix":".java",
+        "addtext":"Controller",
+        "path":"templatefiles/java/Controller",
+        "packageName":"package com.jbit.entity;",
+        "type":"java",
+        "Pathdiameter":"F:\\wd\\node\\produce\\filedata"
+    }
+]
