@@ -2,9 +2,9 @@
 
 
 module.exports = function(entityobj){
-
-    var typeTostring = require('../../utils/TypeConversion')
-    var tool = require('../../utils/tool')
+    var itempath = process.cwd()
+    var typeTostring = require(itempath+'/utils/TypeConversion')
+    var tool = require(itempath+'/utils/tool')
     
     // 所有字段拼接
     var fieldtext1 = ''
@@ -13,7 +13,7 @@ module.exports = function(entityobj){
         fieldtext3 += ` 
     @Override
     public String toString() {
-        return "${entityobj.className}[` 
+        return "${entityobj.BigclassName}[` 
 
         entityobj.fields.forEach(fieldObje => {
         // 获取类型
@@ -27,10 +27,10 @@ module.exports = function(entityobj){
         // getset 方法拼接
         fieldtext2 += `
     public ${fieldString} get${tool.toHump(tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME)))}() {
-        return ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))};
+        return ${tool.toHump(fieldObje.COLUMN_NAME)};
     }
     public void set${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))}(${fieldString} ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))}) {
-        this.${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))} = ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))};
+        this.${tool.toHump(fieldObje.COLUMN_NAME)} = ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))};
     }
             `
         // tostring 方法拼接
@@ -45,8 +45,8 @@ module.exports = function(entityobj){
     var fileText = `
 ${entityobj.packageName}
 // ${entityobj.classCaption}
-public class ${entityobj.className}  extends BaseDomain{
-    public ${entityobj.className}() {
+public class ${entityobj.BigclassName}{
+    public ${entityobj.BigclassName}() {
 
     }
     ${fieldtext1+fieldtext2+fieldtext3}

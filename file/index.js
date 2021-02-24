@@ -10,6 +10,15 @@ var fs = require('fs');
 function createFile(text, path, fileName, suffix) {
     var filepath = path + "\\" + fileName + suffix;
 
+    if(fsExistsSync(path) == false){
+        fs.mkdir(path,function(error){
+            if(error){
+                console.log(error);
+                return false;
+            }
+        })
+    }
+
     //3. fs.writeFile  写入文件（会覆盖之前的内容）（文件不存在就创建）  utf8参数可以省略  
     fs.writeFile(filepath, text, 'utf8', function (error) {
         if (error) {
@@ -20,6 +29,14 @@ function createFile(text, path, fileName, suffix) {
     })
 }
 
+function fsExistsSync(path) {
+    try{
+        fs.accessSync(path,fs.F_OK);
+    }catch(e){
+        return false;
+    }
+    return true;
+}
 module.exports = {
     createFile
 }

@@ -8,9 +8,9 @@ var fs = require('fs')
 // 生成语言
 var languages = [
     {
-        name: 'java',
+        name: 'java-servlet-jdbc',
         status: true,
-        filetype: [1,2]
+        filetype: [1,2,5]
     },
     {
         name: 'c#',
@@ -81,7 +81,8 @@ function queryMysql(templates) {
 function outputFile(table,fieids,templates){
     templates.forEach(t=>{
         var fileobje ={
-            className:tool.首字母转大写(table.tableName)+t.addtext, // 类名
+            BigclassName:tool.首字母转大写(table.tableName),
+            className:table.tableName, // 类名
             classCaption:table.tableDirections, // 类注释
             packageName:t.packageName, // 包名
             PRI:tool.getPRI(fieids), //主键字段信息
@@ -91,7 +92,7 @@ function outputFile(table,fieids,templates){
         var res = getdir(t.path)
         res.then((fun) => {
             var text = fun(fileobje) // 调用模板生成字符串
-            filetool.createFile(text,t.Pathdiameter,fileobje.className+t.addtext,t.suffix) // 生成文件
+            filetool.createFile(text,t.Pathdiameter,fileobje.BigclassName+t.addtext,t.suffix) // 生成文件
         }).catch((err) => {
             console.log(err)
             console.log(t.path + "生成时发生错误")

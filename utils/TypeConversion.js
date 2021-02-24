@@ -8,13 +8,16 @@ type = 语言类型
 module.exports = function (typeText, type) {
     if (type == 'java') {
         if (typeText.indexOf('decimal') != -1) {
-            return "double"
+            return "Double"
         }
         if (typeText.indexOf('varchar') != -1) {
             return "String"
         }
         if (typeText.indexOf('datetime') != -1) {
-            return "Date"
+            return "java.util.Date"
+        }
+        if (typeText.indexOf('int') != -1) {
+            return "Integer"
         }
     }
 
