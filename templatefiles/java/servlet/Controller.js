@@ -3,8 +3,6 @@ module.exports = function(entityobj){
 
     var tool = require('../../../utils/tool')
     var typeTostring = require('../../../utils/TypeConversion')
-     
-
 
     entityobj.fields.forEach(字段=>{
     })
@@ -15,35 +13,30 @@ module.exports = function(entityobj){
             return `
 ${entityobj.packageName}
 
+import java.util.List;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.DaoTemplate;
 import entity.${entityobj.BigclassName};
 import dao.${entityobj.BigclassName}Dao;
 
-@WebServlet(name = "${entityobj.className}", urlPatterns = { "/${entityobj.className}/*", })
+@WebServlet("/${entityobj.className}/*")
 public class ${entityobj.BigclassName}Controller extends BaseServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ${entityobj.BigclassName} ${entityobj.className}Dao = new ${entityobj.BigclassName}();
+	private final ${entityobj.BigclassName}Dao ${entityobj.className}Dao = new ${entityobj.BigclassName}Dao();
 
 	public void queryDataList(HttpServletRequest request, HttpServletResponse response) {
-		
-		String userName = (String) request.getSession().getAttribute("loginName");
-
-		if (userName == null) {
-			request.setAttribute("error", "登录超时");
-			redirecturl("/Jdbcproject/user/showLogin", response);
-			return;
+		try {
+			List<${entityobj.BigclassName}> ${entityobj.className} = ${entityobj.className}Dao.query(null, null);
+			List<${entityobj.BigclassName}> ${entityobj.className}2 = ${entityobj.className}Dao.query(null, null);
+			writeValue(new ResultUtil().getSuccessResult(${entityobj.className}),response);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		UMessage data = new UMessage();
-		data.setProductName(productName);
-		data.setUserName(userName);
-		request.setAttribute("data", data);
-		showView("/addMesssage.jsp", request, response);
 	}
 }
             `

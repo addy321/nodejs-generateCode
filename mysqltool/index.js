@@ -1,4 +1,4 @@
-var filetool = require('../file/index')
+var filetool = require('../utils/filetool/index')
 var tool = require('../utils/tool')
 var getdir = require('../utils/load_dir')
 var connectquery = require('./connectquery')
@@ -100,40 +100,6 @@ function outputFile(table,fieids,templates){
     })
 }
 
-
-/**
- * tableName = 表名
- * tablePrompt = 表说明
- * fields = 表中字段
- */
-function createEntity(tableName, tablePrompt, fields) {
-    fileobje.languages.forEach(item => {
-        //创建实体类需要用到的参数
-        var entityobj = {
-            fields: fields,
-            tableName: tableName,
-            tablePrompt: tablePrompt,
-            className: tool.首字母转大写(tool.toHump(tableName)),
-            type: item.语言,
-            idobj: tool.getId(fields, tableName),
-            package: 'CMSIBusiness'
-        }
-        item.生成的类型.forEach(filetype => {
-            var res = getdir(item.语言 + '\\' + filetype)
-            res.then((fun) => {
-                if (fun) {
-                    var text = fun(entityobj)
-                    filetool.createFile(matchType(filetype, entityobj.className, item.文件不追加类型), text, item.文件后缀, item.语言 + "/" + filetype)
-                }
-            }).catch((err) => {
-                console.log(err)
-                console.log(item.语言 + "未配置" + filetype + "模板")
-            })
-        })
-
-    })
-}
-
 function matchType(type, className, isaddtype) {
     className = tool.首字母转大写(className)
     if ("IBusiness" == type) {
@@ -147,8 +113,6 @@ function matchType(type, className, isaddtype) {
     }
     return className + tool.首字母转大写(type)
 }
-
-
 
 module.exports = {
     main_a
