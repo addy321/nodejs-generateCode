@@ -1,0 +1,95 @@
+html{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body{
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(125deg,#60a3bc,#eb2f06);
+    background-repeat:no-repeat;
+    background-size:100% 100%;
+    -moz-background-size:100% 100%;
+}
+.login{
+    width: 400px;
+    height: 340px;
+    margin: 200px auto;
+    border-right-color: #60a3bc;
+    border-top-color: #60a3bc;
+    border-radius: 20px;
+    background: black;
+    opacity: 0.6;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-size: 18px;
+    position: relative;
+    padding-top: 10px;
+}
+.login *{
+    display: block;
+}
+.lable{
+    position: absolute;
+    left: 30px;
+    color:#60a3bc;
+    z-index: -1;
+}
+.input{
+    width: 80%;
+    height: 30px;
+    position: absolute;
+    left: 30px;
+    background-color: inherit;
+    border: none;
+    border-bottom: 1px solid #60a3bc;
+    color: white;
+    outline: none;
+    font-size: 18px;
+}
+.pass_input{
+    top: 180px;
+}
+.pass_lable{
+    top: 180px;
+}
+.input:focus ~ label,input:valid ~ label{
+    top: 85px;
+    font-size: 16px;
+    color: #eb2f06;
+    transition: 0.5s;
+}
+.pass_input:focus ~ label,.pass_input:valid ~ label{
+    top: 165px;
+    font-size: 16px;
+}
+.submit{
+    width: 80%;
+    height: 40px;
+    position: absolute;
+    top: 270px;
+    left: 10%;
+    border-radius: 20px;
+    text-transform: uppercase;
+    font-size: 22px;
+    color: white;
+    border: none;
+    outline: none;
+    background: #60a3bc;
+}
+.submit:hover {
+    cursor: pointer;
+    color: #1a1a1a;
+    background-image: linear-gradient(125deg,#60a3bc,#eb2f06);
+    transition: 0.8s;
+}
+.prompt{
+    position: absolute;
+    top: 210px;
+    font-size: 15px;
+    left: 10%;
+    color: #eb2f06;
+}

@@ -1,0 +1,24 @@
+<!--引入模板-->
+{{ extend './layout.html' }}
+
+<!--填充消息 对应模板页-head-->
+{{ block 'head' }}
+<style>
+</style>
+{{ /block}}
+
+<!--填充消息 对应模板页-content-->
+{{ block 'content' }}
+    <div class="page-header">
+        <h3>模板列表</h3>
+    </div>
+    {{each templateConfig item index}}
+    <div>
+        <a href="/editTemplateConfig?id={{ item.id }}">{{ item.name }}</a>
+    </div>
+    <hr>
+    {{/each}}
+{{ /block}}
+<!--填充消息 对应模板页-script-->
+{{ block 'script' }}
+{{ /block}}

@@ -1,0 +1,22 @@
+[
+    {
+        "name": "java-servlet-jdbc",
+        "status": true,
+        "filetype": [1,2,5]
+    },
+    {
+        "name": "c#",
+        "status": false,
+        "filetype": 1
+    },
+    {
+        "name": "vue",
+        "status": false,
+        "filetype": 1
+    },
+    {
+        "name": "html",
+        "status": false,
+        "filetype": 1
+    }
+]

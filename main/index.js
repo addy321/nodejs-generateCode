@@ -5,54 +5,38 @@ var connectquery = require('./connectquery')
 var fs = require('fs')
 
 
-// 生成语言
-var languages = [
-    {
-        name: 'java-servlet-jdbc',
-        status: true,
-        filetype: [1,2,5]
-    },
-    {
-        name: 'c#',
-        status: false,
-        filetype: 1
-    },
-    {
-        name: 'vue',
-        status: false,
-        filetype: 1
-    },
-    {
-        name: 'html',
-        status: false,
-        filetype: 1
-    },
-]
 
 /*
 查询要生成的类型
  */
 function main_a() {
-    fs.readFile(__dirname + '/filejson.json', 'utf8', function (err, data) {
-        if (err) console.log(err);
-        var fileTypes = JSON.parse(data);//读取的值
+    var itempath = process.cwd()
+    fs.readFile(itempath + '/jsonConfig/templateConfig.json', 'utf8', function (err1, templateConfig) {
+        if (err1) throw new Error("读取模板配置文件失败!");
+        
+        fs.readFile(itempath + '/jsonConfig/itemConfig.json', 'utf8', function (err2, itemConfig) {
+            if (err2) throw new Error("读取项目配置失败!");
 
-        var templates = []
+            // 读取模板配置
+            var fileTypes = JSON.parse(templateConfig);
+            var templates = []
 
-        languages.forEach(x=>{
-            if(x.status == false) return
-            console.log(x)
-            x.filetype.forEach(typeid=>{
-                fileTypes.forEach(f=>{
-                    if(typeid == f.id) {
-                        templates.push(f)
-                    }
+            // 读取项目配置
+            var items= JSON.parse(itemConfig);
+            var templates = []
+    
+            items.forEach(x=>{
+                if(x.status == false) return
+                x.filetype.forEach(typeid=>{
+                    fileTypes.forEach(f=>{
+                        if(typeid == f.id) {
+                            templates.push(f)
+                        }
+                    })
                 })
             })
+            queryMysql(templates)
         })
-        console.log("要生成的模板>>>>>>>>>>>")
-        console.log(templates)
-        queryMysql(templates)
     });
 }
 

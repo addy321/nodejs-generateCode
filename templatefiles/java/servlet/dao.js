@@ -71,7 +71,7 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
     /*
     * 删除
    */ 
-    public int delete(${IdType} ${idobj.COLUMN_NAME}) throws Exception {
+    public int delete(String ${idobj.COLUMN_NAME}) throws Exception {
         String sql="delete from ${entityobj.className} where ${idobj.COLUMN_NAME}=?";
         List<Object> values=new ArrayList<Object>(1);
             values.add(${idobj.COLUMN_NAME});
@@ -98,7 +98,7 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
     /*
     * 分页查询
    */ 
-    public List<${entityobj.BigclassName}> query(String condition, List<Object> values, Page page) throws Exception {
+    public List<${entityobj.BigclassName}> queryPage(String condition, List<Object> values, Page page) throws Exception {
         String sql="select ${字段字符拼接} from ${entityobj.className}";
         if(condition!=null&&!"".equals(condition)&&values!=null&&values.size()>0){
             sql=sql+" where "+condition;
@@ -129,7 +129,7 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
     /*
     * 数据量大时请不要使用（查询全部数据）
    */ 
-    public List<${entityobj.BigclassName}> query(String condition, List<Object> values) throws Exception {
+    public List<${entityobj.BigclassName}> queryAll(String condition, List<Object> values) throws Exception {
         String sql="select ${字段字符拼接} from ${entityobj.className}";
         if(condition!=null&&!"".equals(condition)&&values!=null&&values.size()>0){
             sql=sql+" where "+condition;
@@ -154,7 +154,7 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
     /*
     * 根据主键查询
    */ 
-    public ${entityobj.BigclassName} queryData(${IdType} ${idobj.COLUMN_NAME}) throws Exception {
+    public ${entityobj.BigclassName} queryData(String ${idobj.COLUMN_NAME}) throws Exception {
     	if(id == null) {
     		return null;
     	}
