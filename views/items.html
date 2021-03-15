@@ -1,0 +1,24 @@
+<!--引入模板-->
+{{ extend './public/layout.html' }}
+
+<!--填充消息 对应模板页-head-->
+{{ block 'head' }}
+<style>
+</style>
+{{ /block}}
+
+<!--填充消息 对应模板页-content-->
+{{ block 'content' }}
+    <div class="page-header">
+        <h3>项目列表</h3>
+    </div>
+    {{each items item index}}
+    <div>
+        <a href="/getItem?id={{ item.id }}">{{ item.name }}</a>
+    </div>
+    <hr>
+    {{/each}}
+{{ /block}}
+<!--填充消息 对应模板页-script-->
+{{ block 'script' }}
+{{ /block}}

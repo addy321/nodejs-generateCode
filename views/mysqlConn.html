@@ -1,0 +1,111 @@
+<!--引入模板-->
+{{ extend './public/layout.html' }}
+
+<!--填充消息 对应模板页-head-->
+{{ block 'head' }}
+<style>
+.td-span{
+    display:inline-block;
+}
+.td-text{
+    display: none;
+}
+</style>
+{{ /block}}
+
+<!--填充消息 对应模板页-content-->
+{{ block 'content' }}
+<div class="page-header">
+    <h3>数据连接列表</h3>
+</div>
+
+<!-- Table -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>主机</th>
+            <th>用户</th>
+            <th>密码</th>
+            <th>数据库名</th>
+            <th>状态</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{each conns item index}}
+        <tr>
+            <td>
+                <span class="td-span">{{ item.host }}</span>
+                <input class="td-text" type="text" name="host" value="{{ item.host }}">
+            </td>
+            <td>
+                <span class="td-span">{{ item.user }}</span>
+                <input class="td-text" type="text" name="user" value="{{ item.user }}">
+            </td>
+            <td>
+                <span class="td-span">{{ item.password }}</span>
+                <input class="td-text" type="text" name="password" value="{{ item.password }}">
+            </td>
+            <td>
+                <span class="td-span">{{ item.database }}</span>
+                <input class="td-text" type="text" name="database" value="{{ item.database }}">
+            </td>
+            <td>
+                {{if item.status == 1}} <span class="label label-danger td-span">使用中</span> {{/if}}
+                {{if item.status == 0}} <span class="td-span">未使用</span> {{/if}}
+                <input class="td-text" type="text" name="status" value="{{ item.status }}">
+            </td>
+            <td>
+                <button type="button" class="btn btn-default btn-xs td-span" onclick="editDate(this)">编辑</button>
+                <button type="button" class="btn btn-default btn-xs td-text" onclick="ok(this,{{item.id}})">确定</button>
+                <button type="button" class="btn btn-default btn-xs td-text" onclick="cancel()">取消</button>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+{{ /block}}
+<!--填充消息 对应模板页-script-->
+{{ block 'script' }}
+<script>
+function editDate(dom) {
+   var tr = $(dom).parent().parent()
+   var tdspan = tr.children().children('.td-span')
+   tdspan.hide()
+   var tdtext = tr.children().children('.td-text')
+   tdtext.show()
+}
+function ok(dom,index){
+   var tr = $(dom).parent().parent()
+   var tdtexts = tr.children().children('.td-text')
+   var data = {}
+   tdtexts.each(x=>{
+     var input = tdtexts[x]
+     if(input.name){
+        data[input.name] = $(input).val()
+     }
+   })
+   data['id']=index
+    $.ajax({
+        url: "/editmysqlConn",
+        dataType: "text", 
+        async: true, 
+        data: data,
+        type: "POST", 
+        success: function (res) { 
+          if(res == 'success'){
+                window.location.reload()
+            }
+        },
+        error: function (errorInfo) {
+            console.log(errorInfo)
+            alert("异常信息，稍后重试");
+        }
+    });
+}
+function cancel(){
+   $(".td-span").show()
+   $(".td-text").hide()
+}
+</script>
+{{ /block}}

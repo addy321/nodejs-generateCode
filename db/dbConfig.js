@@ -2,7 +2,14 @@ var mysql = require('mysql')
 var jsonutil = require('../utils/jsontool/index')
 
 function querySql(sql, params, callback) {
-    jsonutil.getMysqlJSON(function(mysqlConfig){
+    jsonutil.getMysqlJSON(function (mysqlJson) {
+        var mysqlConfig = {
+            host: mysqlJson.host,
+            user: mysqlJson.user,
+            password: mysqlJson.password,
+            port: mysqlJson.port,
+            database: mysqlJson.database
+        }
         delete mysqlConfig.status;
         //每次使用的时候需要创建链接，数据操作完成之后要关闭连接
         var connection = mysql.createConnection(mysqlConfig);
@@ -31,5 +38,5 @@ function querySql(sql, params, callback) {
 }
 
 module.exports = {
-    querySql, 
+    querySql,
 }

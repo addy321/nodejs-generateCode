@@ -47,7 +47,7 @@ function createFile(text, path, fileName, suffix) {
         console.log('生成文件————>' + filepath);
     })
 }
-
+// 判断文件是否存在
 function fsExistsSync(path) {
     try {
         fs.accessSync(path, fs.F_OK);
@@ -56,7 +56,21 @@ function fsExistsSync(path) {
     }
     return true;
 }
+/**
+ * 读取文件内容
+ * @param {String} path 
+ * @param {Function} callback 
+ */
+function getFile(path,callback){
+    console.log(path)
+    fs.readFile(path, 'utf8', function (err, text) {
+        if (err){
+            callback(err,text)
+        }
+        callback(err,text)
+    })
+}
 
 module.exports = {
-    createFile,Copyfiles
+    createFile,Copyfiles,getFile
 }

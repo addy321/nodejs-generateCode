@@ -1,0 +1,40 @@
+<!--引入模板-->
+{{ extend './public/layout.html' }}
+
+<!--填充消息 对应模板页-head-->
+{{ block 'head' }}
+<style>
+</style>
+{{ /block}}
+
+<!--填充消息 对应模板页-content-->
+{{ block 'content' }}
+    <div class="page-header">
+        <h3>项目：{{data.name}}</h3>
+    </div>
+    <form action="/saveitem" method="POST" id="form">
+        <input type="hidden" class="form-control" name="id" value="{{ data.id }}">
+        项目名：<input type="text" class="form-control" name="name" value="{{ data.name }}">
+        开启生成代码：
+         开启<input type="radio" name="status" value="1" {{if data.status == '1'}} checked {{/if}}> &nbsp; 
+         关闭<input type="radio" name="status" value="0" {{if data.status == '0'}} checked {{/if}}>
+        <br>
+        <hr>
+        <h4>对应生成的模板</h4>
+        {{each tlist t index}}
+        <div style="margin: 20px 0px;">
+            <a href="/getTemplateConfig?id={{ t.id }}">{{ t.name }}</a>&nbsp; <input type="checkbox" name="filetype" value="{{t.id}}"  checked="yes">
+        </div>
+        {{/each}}
+        {{each templateConfig tc index}}
+        <div style="margin: 20px 0px;">
+            <a href="/getTemplateConfig?id={{ tc.id }}">{{ tc.name }}</a>&nbsp; <input type="checkbox" name="filetype" value="{{tc.id}}">
+        </div>
+        {{/each}}
+        <button type="submit" class="btn  btn-danger">保存</button>
+        <button type="button" class="btn  btn-danger">生成代码</button>
+    </form>
+{{ /block}}
+<!--填充消息 对应模板页-script-->
+{{ block 'script' }}
+{{ /block}}

@@ -1,7 +1,4 @@
-
-
-
-module.exports = function(entityobj){
+function e(entityobj){
     var itempath = process.cwd()
     var typeTostring = require(itempath+'/utils/TypeConversion')
     var tool = require(itempath+'/utils/tool')
@@ -56,3 +53,5 @@ public class ${entityobj.BigclassName}{
         return  fileText
 
 }
+
+module.exports = e()

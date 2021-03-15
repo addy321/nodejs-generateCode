@@ -8,10 +8,21 @@ var itempath = process.cwd()
 function getJSONFile(path,callback){
     fs.readFile(itempath + path, 'utf8', function (err1, JSONText) {
         if (err1)
-            throw new Error("读取模板配置文件失败!");
+            callback(err1,null)
         var JSONData = JSON.parse(JSONText)
-        callback(JSONData)
+        callback(null,JSONData)
     })
+}
+/**
+ *  写入JSON文件配置
+ * @param {String} path 路径
+ * @param {Object} data JSON字符
+ */
+function setJSONFile(path,data){
+    var text = JSON.stringify(data)
+    fs.writeFile(itempath + path, text, 'utf8', (err) => {
+        if (err) throw err;
+    });
 }
 
 /**
@@ -29,6 +40,9 @@ function getMysqlJSON(callback){
         callback(data)
     })
 }
+
+
+
 module.exports = {
-    getMysqlJSON,getJSONFile
+    getMysqlJSON,getJSONFile,setJSONFile
 }

@@ -1,5 +1,4 @@
-
-module.exports = function(entityobj){
+function c(entityobj){
 
     var tool = require('../../../utils/tool')
     var typeTostring = require('../../../utils/TypeConversion')
@@ -90,3 +89,4 @@ public class ${entityobj.BigclassName}Controller extends BaseServlet {
 }
             `
 }
+module.exports = c()

@@ -1,52 +1,52 @@
 [
     {
-        "id":1,
-        "name":"servlet 实体模板 javaEntity",
-        "suffix":".java",
-        "addtext":"",
-        "path":"templatefiles/java/servlet/entity",
-        "packageName":"package entity;",
-        "type":"java",
-        "Pathdiameter":"F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\entity"
+        "id": 1,
+        "name": "servlet 实体模板 javaEntity",
+        "suffix": ".java",
+        "addtext": "",
+        "path": "templatefiles/java/servlet/entity",
+        "packageName": "package entity;",
+        "type": "java",
+        "Pathdiameter": "F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\entity"
     },
     {
-        "id":2,
-        "name":"servlet dao层模板 javaDao",
-        "suffix":".java",
-        "addtext":"Dao",
-        "path":"templatefiles/java/servlet/dao",
-        "packageName":"package dao;",
-        "type":"java",
-        "Pathdiameter":"F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\dao"
+        "id": 2,
+        "name": "servlet dao层模板 javaDao",
+        "suffix": ".java",
+        "addtext": "Dao",
+        "path": "templatefiles/java/servlet/dao",
+        "packageName": "package dao;",
+        "type": "java",
+        "Pathdiameter": "F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\dao"
     },
     {
-        "id":3,
-        "name":"servlet servlet层模板 javaService",
-        "suffix":".java",
-        "addtext":"service",
-        "path":"templatefiles/java/servlet/service",
-        "packageName":"package controller;",
-        "type":"java",
-        "Pathdiameter":"F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\entity"
+        "id": 3,
+        "name": "servlet servlet层模板 javaService",
+        "suffix": ".java",
+        "addtext": "service",
+        "path": "templatefiles/java/servlet/service",
+        "packageName": "package controller;",
+        "type": "java",
+        "Pathdiameter": "F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\entity"
     },
     {
-        "id":4,
-        "name":"servlet servlet实现层模板 javaServiceimpl",
-        "suffix":".java",
-        "addtext":"serviceimpl",
-        "path":"templatefiles/java/servlet/serviceimpl",
-        "packageName":"package entity;",
-        "type":"java",
-        "Pathdiameter":"F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\entity"
+        "id": 4,
+        "name": "servlet servlet层模板 javaService",
+        "suffix": ".java",
+        "addtext": "serviceimpl",
+        "path": "templatefiles/java/servlet/serviceimpl",
+        "packageName": "package entity;",
+        "type": "java",
+        "Pathdiameter": "F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\servlet\\impl"
     },
     {
-        "id":5,
-        "name":"servlet 控制层模板 javaController",
-        "suffix":".java",
-        "addtext":"Controller",
-        "path":"templatefiles/java/servlet/Controller",
-        "packageName":"package controller;",
-        "type":"java",
-        "Pathdiameter":"F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\controller"
+        "id": 5,
+        "name": "servlet 控制层模板 javaController",
+        "suffix": ".java",
+        "addtext": "Controller",
+        "path": "templatefiles/java/servlet/Controller",
+        "packageName": "package controller;",
+        "type": "java",
+        "Pathdiameter": "F:\\wd\\java\\biyesheji\\ServletTemplate\\src\\controller"
     }
 ]

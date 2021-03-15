@@ -1,5 +1,4 @@
-
-module.exports = function(entityobj){
+function d(entityobj){
     var itempath = process.cwd()
     var tool = require(itempath+'/utils/tool')
     var typeTostring = require(itempath+'/utils/TypeConversion')
@@ -192,3 +191,5 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
 }
             `
 }
+
+module.exports = d()

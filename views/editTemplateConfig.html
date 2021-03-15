@@ -1,20 +1,176 @@
 <!--引入模板-->
-{{ extend './layout.html' }}
+{{ extend './public/layout.html' }}
 
 <!--填充消息 对应模板页-head-->
 {{ block 'head' }}
-<style>
+<style type="text/css">
+    @media screen and (min-width: 960px) {
+        .editorSet {
+            width: 100%;
+        }
+        .editorSet .editor {
+            height: 600px;
+            width: 100%;
+            overflow-y: hidden;
+            background-color: rgb(44, 52, 55);
+            float: left;
+        }
+    }
+
+    @media screen and (max-width: 959px) {
+        .editorSet {
+            width: 100%;
+        }
+        .editorSet .editor {
+            height: 550px;
+            width: 100%;
+            overflow-y: hidden;
+            background-color: rgb(44, 52, 55);
+        }
+    }
+
+    .label {
+        background: rgba(230, 230, 230, 0.5);
+        height: 20px;
+        padding: 0 6px;
+        line-height: 20px;
+        z-index: 999;
+        text-align: center;
+        font-size: 12px;
+        color: #BBB;
+        border-radius: 3px;
+    }
+
+    .submit-btn {
+        color: #fff;
+        background-color: #67c23a;
+        display: inline-block;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        border: 1px solid #67c23a;
+        -webkit-appearance: none;
+        text-align: center;
+        box-sizing: border-box;
+        outline: none;
+        margin: 0;
+        transition: .1s;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        padding: 12px 20px;
+        font-size: 14px;
+        border-radius: 4px;
+        margin-bottom: 2px;
+    }
+
+    .edit-area {
+        height: 100%;
+    }
+    .VConsole{
+        height: 300px;
+        width: 100%;
+    }
+    .VConsole iframe {
+        border: 0 !important;
+        min-height: 100px;
+        min-width: 100px;
+        height: 100%;
+        width: 100%;
+    }
 </style>
 {{ /block}}
 
 <!--填充消息 对应模板页-content-->
 {{ block 'content' }}
-    <div class="page-header">
-        <h3>编辑模板</h3>
+<div class="page-header">
+    <h3>编辑模板</h3>
+</div>
+<h3>模板名：{{ data.name }}</h3>
+<div>
+    <form action="/saveTemplateConfig" method="POST" id="form">
+        <input type="hidden" class="form-control" name="id" value="{{ data.id }}">
+        模板名：<input type="text" class="form-control" name="name" value="{{ data.name }}">
+        文件后缀： <input type="text" class="form-control" name="suffix" value="{{ data.suffix }}">
+        文件名追加内容：<input type="text" class="form-control" name="addtext" value="{{ data.addtext }}">
+        模板路径：<input type="text" class="form-control" name="path" value="{{ data.path }}">
+        包名：<input type="text" class="form-control" name="packageName" value="{{ data.packageName }}">
+        文件类型： <input type="text" class="form-control" name="type" value="{{ data.type }}">
+        生成路径：<input type="text" class="form-control" name="Pathdiameter" value="{{ data.Pathdiameter }}">
+    </form>
+ 
+    <h3>模板代码：</h3>
+    <div id="codetext" style="display: none;">{{ text }}</div>
+    <div class="NightTheme">
+        <a class="submit-btn" id="submit">提交运行</a>
+        <a class="submit-btn" onclick="$('#form').submit()">保存配置</a>
+        <a class="submit-btn">保存模板</a>
+        <div id="main_container">
+            <div id="core" class="core core_margin1">
+                <div class="editorSet clearfix">
+                    <div>
+                        <div class="editor">
+                            <span class="label">javascript</span>
+                            <pre id="editor3" class="edit-area"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="VConsole">
+            <iframe style="top: 0;background: #fff;" class="edit-area" id="preview" frameborder="0" srcdoc="<!DOCTYPE html><html><head><meta charset=&quot;utf-8&quot; /><title>代码测试</title><meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/><meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /><meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black&quot; /><meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot; /><meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;chrome=1,IE=edge&quot;/><meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0&quot;/><style type=&quot;text/css&quot;></style><script type=&quot;text/javascript&quot; src=&quot;https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js&quot;></script><script type=&quot;text/javascript&quot;>new window.VConsole();</script></head><body><script type=&quot;text/javascript&quot;></script></body></html>"></iframe>
+        </div>
     </div>
-    
-
+</div>
 {{ /block}}
 <!--填充消息 对应模板页-script-->
 {{ block 'script' }}
+<script type="text/javascript" src="./public/src-noconflict/ace.js"></script>
+<script type="text/javascript" src="./public/src-noconflict/ext-language_tools.js"></script>
+<script type="text/javascript">
+(function() {
+    var editor3 = ace.edit("editor3", {
+        theme: "ace/theme/monokai",
+        mode: "ace/mode/javascript",
+        autoScrollEditorIntoView: true,
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
+
+    editor3.setValue($('#codetext').text()) 
+
+    var submit = document.querySelector('#submit');
+    submit.addEventListener('click', function() {
+        var jsValue = editor3.getValue();
+        var htmlStr = '<!DOCTYPE html>' +
+            '<html>' +
+            '<head>' +
+            '<meta charset="utf-8" />' +
+            '<title>代码测试</title>' +
+            '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' +
+            '<meta name="format-detection" content="telephone=no" />' +
+            '<meta name="apple-mobile-web-app-status-bar-style" content="black" />' +
+            '<meta name="apple-mobile-web-app-capable" content="yes" />' +
+            '<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge"/>' +
+            '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>' +
+            '<script type="text/javascript" src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js">' +
+            '</' +
+            'script>' +
+            '<script type="text/javascript">' +
+            'new window.VConsole();' +
+            '</' +
+            'script>' +
+            '</head>' +
+            '<body>' +
+            '<script type="text/javascript">' +
+             jsValue +
+            '</' +
+            'script>' +
+            '</body>' +
+            '</html>';
+        document.getElementById('preview').srcdoc = htmlStr;
+    })
+})()
+</script>
 {{ /block}}

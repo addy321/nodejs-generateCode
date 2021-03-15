@@ -1,5 +1,5 @@
 <!--引入模板-->
-{{ extend './layout.html' }}
+{{ extend './public/layout.html' }}
 
 <!--填充消息 对应模板页-head-->
 {{ block 'head' }}
@@ -13,8 +13,8 @@
         <h3>模板列表</h3>
     </div>
     {{each templateConfig item index}}
-    <div>
-        <a href="/editTemplateConfig?id={{ item.id }}">{{ item.name }}</a>
+    <div style="margin: 20px 0px;">
+        <a href="/getTemplateConfig?id={{ item.id }}">{{ item.name }}</a>
     </div>
     <hr>
     {{/each}}
