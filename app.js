@@ -1,10 +1,9 @@
-// 生成模块
-var myquery = require('./main/index')
 
 //app 核心包
 var express = require('express')
 //引入路由模块
 var router = require('./appRouter/index')
+var associate = require('./appRouter/associate')
 // post 
 const bodyParser = require('body-parser')
 
@@ -25,6 +24,7 @@ app.use(bodyParser.json())
 
 // 挂载路由容器在app服务中
 app.use(router)
+app.use(associate)
 
 app.listen(3000, function () {
     console.log("程序启动。。。。。 localhost:3000")

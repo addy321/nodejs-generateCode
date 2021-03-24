@@ -169,17 +169,12 @@ router.post('/saveitem', function (req, res) {
  */
 router.get('/generateCode', function (req, res) {
     var id = req.query.id
-    jsonutil.getJSONFile("/jsonConfig/itemConfig.json", function (err,JSONData) {
-        var data = null
-        for (var i in JSONData) {
-            if (id == JSONData[i].id) {
-                data = JSONData[i]
-                break
-            }
+    main.useTemplatefiles(id,function(error,reslet){
+        if(error){
+            res.send("出现错误")
         }
-        jsonutil.setJSONFile('/jsonConfig/itemConfig.json', JSONData)
-        res.redirect("/getItem?id="+data.id)
     })
+    res.send("生成成功")
 })
 
 module.exports = router

@@ -27,6 +27,7 @@
             <th>用户</th>
             <th>密码</th>
             <th>数据库名</th>
+            <th>端口</th>
             <th>状态</th>
         </tr>
     </thead>
@@ -48,6 +49,10 @@
             <td>
                 <span class="td-span">{{ item.database }}</span>
                 <input class="td-text" type="text" name="database" value="{{ item.database }}">
+            </td>
+            <td>
+                <span class="td-span">{{ item.port }}</span>
+                <input class="td-text" type="text" name="port" value="{{ item.port }}">
             </td>
             <td>
                 {{if item.status == 1}} <span class="label label-danger td-span">使用中</span> {{/if}}

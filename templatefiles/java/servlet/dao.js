@@ -1,9 +1,8 @@
-function d(entityobj){
+var d = function(entityobj){
     var itempath = process.cwd()
     var tool = require(itempath+'/utils/tool')
     var typeTostring = require(itempath+'/utils/TypeConversion')
     
-
     var 映射字段字符拼接 = ''
     var 字段字符拼接 = ''
     var 问号 = ''
@@ -192,4 +191,4 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
             `
 }
 
-module.exports = d()
+module.exports = d;

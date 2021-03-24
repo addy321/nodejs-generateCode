@@ -30,7 +30,7 @@ function setJSONFile(path,data){
  * @param {Function} callback 
  */
 function getMysqlJSON(callback){
-    getJSONFile('/jsonConfig/mysqlConn.json',function(JSONData){
+    getJSONFile('/jsonConfig/mysqlConn.json',function(err,JSONData){
         var data = null;
         JSONData.forEach(x => {
             if (x.status == 1) {

@@ -2,15 +2,15 @@ var filetool = require('../utils/filetool/index')
 var tool = require('../utils/tool')
 var getdir = require('../utils/load_dir')
 var connectquery = require('./connectquery')
+var jsonutil = require('../utils/jsontool/index')
+var itempath = process.cwd()
 var fs = require('fs')
 
-
-
-/*
-查询要生成的类型
+/**
+ * 获取启用中的模板
+ * @param {Function} callback 返回可用模板List
  */
-function main_a() {
-    var itempath = process.cwd()
+function startTemplateConfig(callback) {
     fs.readFile(itempath + '/jsonConfig/templateConfig.json', 'utf8', function (err1, templateConfig) {
         if (err1) throw new Error("读取模板配置文件失败!");
         
@@ -35,10 +35,21 @@ function main_a() {
                     })
                 })
             })
-            queryMysql(templates)
+            callback(templates)
         })
     });
 }
+
+/**
+ * 生成启用项目的所以模板文件
+ */
+function main_a() {
+    startTemplateConfig(templates=>{
+        queryMysql(templates)
+    })
+}
+
+
 
 /**
  * msyql 生成文件
@@ -57,7 +68,7 @@ function queryMysql(templates) {
 }
 
 /**
- * 
+ * 调用模板生成代码
  * @param {{}} table 表的信息
  * @param {[]} fieids  表中字段信息
  * @param {[]} templates  生成模板
@@ -83,21 +94,40 @@ function outputFile(table,fieids,templates){
         })
     })
 }
+/**
+ * 根据项目生成模板
+ * @param {String} itemid  项目配置的Id
+ * @param {Function} callback err,res  
+ */
+function useTemplatefiles(itemid,callback){
+    jsonutil.getJSONFile("/jsonConfig/itemConfig.json", function (err,JSONData) {
+        if(err)callback(err,null)
+        var item = null
+        for (var i in JSONData) {
+            if (itemid == JSONData[i].id) {
+                item =  JSONData[i]
+                break
+            }
+        }
+        jsonutil.getJSONFile("/jsonConfig/templateConfig.json", function (err,templateConfig) {
+            if(err)callback(err,null)
+            var tlist = []
+             // 获取对应的模板
+            var ts = item.filetype
+            ts.forEach(t=>{
+                for (var i in templateConfig) {
+                    if (t == templateConfig[i].id) {
+                        tlist.push(templateConfig[i])
+                        break
+                    }
+                }
+            })
+            queryMysql(tlist)
+        })
 
-function matchType(type, className, isaddtype) {
-    className = tool.首字母转大写(className)
-    if ("IBusiness" == type) {
-        return "I" + className + "Business"
-    }
-    if ("entity" == type) {
-        return className
-    }
-    if (isaddtype === true) {
-        return className
-    }
-    return className + tool.首字母转大写(type)
+    })
 }
 
 module.exports = {
-    main_a
+    main_a,useTemplatefiles,outputFile,startTemplateConfig
 }

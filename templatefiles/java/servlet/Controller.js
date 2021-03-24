@@ -1,14 +1,5 @@
-function c(entityobj){
-
-    var tool = require('../../../utils/tool')
-    var typeTostring = require('../../../utils/TypeConversion')
-
-    entityobj.fields.forEach(字段=>{
-    })
-            
-    var idobj = entityobj.PRI
-    var IdType = typeTostring(idobj.DATA_TYPE,entityobj.type)
-
+var c = function(entityobj){
+ var idobj = entityobj.PRI
             return `
 ${entityobj.packageName}
 
@@ -89,4 +80,4 @@ public class ${entityobj.BigclassName}Controller extends BaseServlet {
 }
             `
 }
-module.exports = c()
+module.exports = c;

@@ -32,9 +32,26 @@
         </div>
         {{/each}}
         <button type="submit" class="btn  btn-danger">保存</button>
-        <button type="button" class="btn  btn-danger">生成代码</button>
+        <button type="button" class="btn  btn-danger" onclick="c({{ data.id }})">生成代码</button>
     </form>
 {{ /block}}
 <!--填充消息 对应模板页-script-->
 {{ block 'script' }}
+<script>
+    function c(id){
+        $.ajax({
+            url: "/generateCode?id="+id,
+            dataType: "text", 
+            async: true, 
+            type: "GET", 
+            success: function (res) { 
+                alert(res);
+            },
+            error: function (errorInfo) {
+                console.log(errorInfo)
+                alert("异常信息，稍后重试");
+            }
+        });
+    } 
+</script>
 {{ /block}}
