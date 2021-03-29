@@ -2,8 +2,9 @@
 //app 核心包
 var express = require('express')
 //引入路由模块
-var router = require('./appRouter/index')
-var associate = require('./appRouter/associate')
+var router = require('./controller/index')
+var associate = require('./controller/associate')
+
 // post 
 const bodyParser = require('body-parser')
 

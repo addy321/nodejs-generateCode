@@ -10,11 +10,12 @@
 <!--填充消息 对应模板页-content-->
 {{ block 'content' }}
     <div class="page-header">
-        <h3>项目列表</h3>
+        <h3>项目列表 <a href="/getItem">添加项目</a></h3>
     </div>
     {{each items item index}}
     <div>
         <a href="/getItem?id={{ item.id }}">{{ item.name }}</a>
+        <a style="float: right;" href="/delitem?id={{ item.id }}">删除</a>
     </div>
     <hr>
     {{/each}}

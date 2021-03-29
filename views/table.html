@@ -11,6 +11,7 @@
 .btn-sm{
     float: right;
     top: 10px;
+    margin-left: 10px;
 }
 </style>
 {{ /block}}
@@ -22,8 +23,9 @@
     </div>
     {{each tables table index}}
     <div style="margin: 20px 0px;">
-        表名：<a href="javascript:void(0);" onclick="showfieids('{{ index }}','{{table.tableName}}')"> {{table.tableName }}</a>
+        表名：<a href="javascript:void(0);"> {{table.tableName }}</a>
         <span style="margin-left: 20px;">表注释：{{ table.tableDirections }}</span>
+        <button class="btn btn-sm" type="button" onclick="showfieids('{{ index }}','{{table.tableName}}')">展开字段</button>
         <button class="btn btn-sm" type="button" onclick="tableCode({{table}})">生成代码</button>
         <!-- 响应式表格 .table-responsive -->
         <div class="table-responsive fieidstable{{index}}" class="">
@@ -77,20 +79,24 @@ function showfieids(index,tableName){
 }
 function tableCode(tableobj){
     console.log(tableobj)
-    $.ajax({
-        url: "/tableCode",
-        dataType: "text", 
-        async: true, 
-        data: tableobj,
-        type: "post", 
-        success: function (res) { 
-            alert(res);
-        },
-        error: function (errorInfo) {
-            console.log(errorInfo)
-            alert("异常信息，稍后重试");
-        }
-    });
+    var res=confirm("确定生成？");
+    if (res==true)
+    {
+       $.ajax({
+           url: "/tableCode",
+           dataType: "text", 
+           async: true, 
+           data: tableobj,
+           type: "post", 
+           success: function (res) { 
+               alert(res);
+           },
+           error: function (errorInfo) {
+               console.log(errorInfo)
+               alert("异常信息，稍后重试");
+           }
+       });
+    }
 }
 </script>
 {{ /block}}

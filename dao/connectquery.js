@@ -1,5 +1,5 @@
 
-var db = require('../db/dbConfig')
+var db = require('./dbConfig')
 var jsonutil = require('../utils/jsontool/index')
 
 /**

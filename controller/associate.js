@@ -1,7 +1,7 @@
 
 var express = require('express')
-var connectquery = require('../main/connectquery')
-var main = require('../main/index')
+var connectquery = require('../dao/connectquery')
+var service = require('../service/index')
 
 var associate = express.Router()
 
@@ -32,8 +32,8 @@ associate.get('/allTablefieids', function (req, res) {
 associate.post('/tableCode', function (req, res) {
     var tableobj = req.body
     connectquery.MysqlallField(tableobj.tableName,fieids => {
-        main.startTemplateConfig(x=>{
-            main.outputFile(tableobj,fieids,x)
+        service.startTemplateConfig(x=>{
+            service.outputFile(tableobj,fieids,x)
         })
         res.send("success")
     })

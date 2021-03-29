@@ -97,14 +97,19 @@
         包名：<input type="text" class="form-control" name="packageName" value="{{ data.packageName }}">
         文件类型： <input type="text" class="form-control" name="type" value="{{ data.type }}">
         生成路径：<input type="text" class="form-control" name="Pathdiameter" value="{{ data.Pathdiameter }}">
+        <br>
+        模板类型：
+        js代码生成<input type="radio" name="tftype" value="1" {{if data.tftype == '1'}} checked {{/if}}> &nbsp; 
+        templates模板生成<input type="radio" name="tftype" value="2" {{if data.tftype == '2'}} checked {{/if}}>
+       <br>
     </form>
  
     <h3>模板代码：</h3>
     <div id="codetext" style="display: none;">{{ text }}</div>
     <div class="NightTheme">
-        <a class="submit-btn" id="submit">提交运行</a>
         <a class="submit-btn" onclick="$('#form').submit()">保存配置</a>
-        <a class="submit-btn">保存模板</a>
+        <a class="submit-btn" id="submit">提交运行</a>
+        <a class="submit-btn saveTemplatejs" jspath ={{data.path}}>保存模板</a>
         <div id="main_container">
             <div id="core" class="core core_margin1">
                 <div class="editorSet clearfix">
@@ -117,6 +122,70 @@
                 </div>
             </div>
         </div>
+        <div style="position: fixed;
+        top: 50px;
+        left: 0px;
+        z-index:10;">
+            <textarea rows="40" cols="50">
+{
+    "BigclassName": "Tb_user",
+    "className": "tb_user",
+    "classCaption": "用户表",
+    "packageName": "package entity;",
+    "PRI": {
+        "TABLE_CATALOG": "def",
+        "TABLE_SCHEMA": "biu",
+        "TABLE_NAME": "tb_user",
+        "COLUMN_NAME": "id",
+        "ORDINAL_POSITION": 1,
+        "COLUMN_DEFAULT": null,
+        "IS_NULLABLE": "NO",
+        "DATA_TYPE": "bigint",
+        "CHARACTER_MAXIMUM_LENGTH": null,
+        "CHARACTER_OCTET_LENGTH": null,
+        "NUMERIC_PRECISION": 20,
+        "NUMERIC_SCALE": 0,
+        "DATETIME_PRECISION": null,
+        "CHARACTER_SET_NAME": null,
+        "COLLATION_NAME": null,
+        "COLUMN_TYPE": "bigint unsigned",
+        "COLUMN_KEY": "PRI",
+        "EXTRA": "",
+        "PRIVILEGES": "select,insert,update,references",
+        "COLUMN_COMMENT": "消息给过来的ID",
+        "GENERATION_EXPRESSION": "",
+        "SRS_ID": null
+    },
+    "fields": [
+        {
+            "TABLE_CATALOG": "def",
+            "TABLE_SCHEMA": "biu",
+            "TABLE_NAME": "tb_user",
+            "COLUMN_NAME": "password",
+            "ORDINAL_POSITION": 4,
+            "COLUMN_DEFAULT": "",
+            "IS_NULLABLE": "NO",
+            "DATA_TYPE": "varchar",
+            "CHARACTER_MAXIMUM_LENGTH": 128,
+            "CHARACTER_OCTET_LENGTH": 512,
+            "NUMERIC_PRECISION": null,
+            "NUMERIC_SCALE": null,
+            "DATETIME_PRECISION": null,
+            "CHARACTER_SET_NAME": "utf8mb4",
+            "COLLATION_NAME": "utf8mb4_unicode_ci",
+            "COLUMN_TYPE": "varchar(128)",
+            "COLUMN_KEY": "",
+            "EXTRA": "",
+            "PRIVILEGES": "select,insert,update,references",
+            "COLUMN_COMMENT": "密码",
+            "GENERATION_EXPRESSION": "",
+            "SRS_ID": null
+        }
+    ],
+    "type": "java"
+}
+            </textarea>
+        </div>
         <div class="VConsole">
             <iframe style="top: 0;background: #fff;" class="edit-area" id="preview" frameborder="0" srcdoc="<!DOCTYPE html><html><head><meta charset=&quot;utf-8&quot; /><title>代码测试</title><meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;/><meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /><meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black&quot; /><meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot; /><meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;chrome=1,IE=edge&quot;/><meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0&quot;/><style type=&quot;text/css&quot;></style><script type=&quot;text/javascript&quot; src=&quot;https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js&quot;></script><script type=&quot;text/javascript&quot;>new window.VConsole();</script></head><body><script type=&quot;text/javascript&quot;></script></body></html>"></iframe>
         </div>
@@ -128,7 +197,31 @@
 <script type="text/javascript" src="./public/src-noconflict/ace.js"></script>
 <script type="text/javascript" src="./public/src-noconflict/ext-language_tools.js"></script>
 <script type="text/javascript">
+
+
+
 (function() {
+     //保存模板
+     $('.saveTemplatejs').click(function(){
+        var text =  editor3.getValue();
+        var path = $(this).attr('jspath')
+        var tftype = $("input[name = 'tftype']:checked").val()
+        $.ajax({
+            url: "/saveTemplatejs",
+            dataType: "text", 
+            async: true,
+            data: {path:path,text:text,tftype:tftype },
+            type: "POST", 
+            success: function (res) { 
+                alert(res);
+            },
+            error: function (errorInfo) {
+                console.log(errorInfo)
+                alert("异常信息，稍后重试");
+            }
+        });
+     })
+
     var editor3 = ace.edit("editor3", {
         theme: "ace/theme/monokai",
         mode: "ace/mode/javascript",
@@ -138,6 +231,7 @@
         enableLiveAutocompletion: true
     });
 
+   
     editor3.setValue($('#codetext').text()) 
 
     var submit = document.querySelector('#submit');

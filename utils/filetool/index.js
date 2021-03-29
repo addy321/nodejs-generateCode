@@ -1,4 +1,5 @@
 var fs = require('fs');
+var itempath = process.cwd()
 
 /**
  * 复制文件到指定目录下面
@@ -47,6 +48,40 @@ function createFile(text, path, fileName, suffix) {
         console.log('生成文件————>' + filepath);
     })
 }
+
+/**
+ *  生成模板js
+ * @param {string} text 文件内容
+ * @param {string} path 文件路径
+ */
+ function createTemplate(text, path, suffix) {
+    // 获取文件名
+    var index =path.lastIndexOf("\/");
+    var jsname = path.substring(index + 1, path.length);
+    //获取路径
+    path = path.substr(0, index);
+
+    var filepath = (itempath + "\\"+path + "\\" + jsname + suffix);
+
+    if (fsExistsSync(filepath) == false) {
+        fs.mkdir(path, function (error) {
+            if (error) {
+                console.log(error);
+                return false;
+            }
+        })
+    }
+    filepath = filepath.replace(/\//g, "\\");
+    //3. fs.writeFile  写入文件（会覆盖之前的内容）（文件不存在就创建）  utf8参数可以省略  
+    fs.writeFile(filepath, text, 'utf8', function (error) {
+        if (error) {
+            console.log(error);
+            return false;
+        }
+        console.log('生成模板————>' + filepath);
+    })
+}
+
 // 判断文件是否存在
 function fsExistsSync(path) {
     try {
@@ -72,5 +107,5 @@ function getFile(path,callback){
 }
 
 module.exports = {
-    createFile,Copyfiles,getFile
+    createFile,Copyfiles,getFile,createTemplate
 }

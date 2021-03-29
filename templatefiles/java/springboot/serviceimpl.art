@@ -1,0 +1,48 @@
+{{tf.packageName}}
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cms.dao.{{tf.BigclassName}}Dao;
+import com.cms.entity.{{tf.BigclassName}};
+import com.cms.service.{{tf.BigclassName}}Service;
+
+@Service
+public class {{tf.classNameAddtext}} implements {{tf.BigclassName}}Service {
+
+	@Autowired
+	private {{tf.BigclassName}}Dao {{tf.thclassName}}Dao;
+	
+	@Override
+	public List<{{tf.BigclassName}}> get{{tf.BigclassName}}s(int pageIndex, int pageRows) {
+		return {{tf.thclassName}}Dao.get{{tf.BigclassName}}s(pageIndex, pageRows);
+	}
+
+	@Override
+	public int add{{tf.BigclassName}}({{tf.BigclassName}} data) {
+		return {{tf.thclassName}}Dao.add{{tf.BigclassName}}(data);
+	}
+
+	@Override
+	public int del{{tf.BigclassName}}(int id) {
+		return {{tf.thclassName}}Dao.del{{tf.BigclassName}}(id);
+	}
+
+	@Override
+	public int up{{tf.BigclassName}}({{tf.BigclassName}} data) { 
+		return {{tf.thclassName}}Dao.up{{tf.BigclassName}}(data);
+	}
+
+	@Override
+	public {{tf.BigclassName}} get{{tf.BigclassName}}(Integer id) {
+		return {{tf.thclassName}}Dao.get{{tf.BigclassName}}(id);
+	}
+
+	@Override
+	public int get{{tf.BigclassName}}Count() {
+		return {{tf.thclassName}}Dao.get{{tf.BigclassName}}Count();
+	}
+
+}

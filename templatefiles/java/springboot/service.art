@@ -1,0 +1,20 @@
+{{tf.packageName}}
+
+import java.util.List;
+
+import com.cms.entity.{{tf.BigclassName}};
+
+public interface {{tf.classNameAddtext}} {
+	
+	List<{{tf.BigclassName}}> get{{tf.BigclassName}}s(int pageIndex, int pageRows);
+
+    int add{{tf.BigclassName}}({{tf.BigclassName}} data);
+
+    int del{{tf.BigclassName}}( int id);
+
+    int up{{tf.BigclassName}}({{tf.BigclassName}} data);
+
+    {{tf.BigclassName}} get{{tf.BigclassName}}(Integer id);
+    
+    int get{{tf.BigclassName}}Count(); 
+}

@@ -1,10 +1,11 @@
 var filetool = require('../utils/filetool/index')
 var tool = require('../utils/tool')
 var getdir = require('../utils/load_dir')
-var connectquery = require('./connectquery')
+var connectquery = require('../dao/connectquery')
 var jsonutil = require('../utils/jsontool/index')
 var itempath = process.cwd()
 var fs = require('fs')
+var template = require('art-template');
 
 /**
  * 获取启用中的模板
@@ -50,7 +51,6 @@ function main_a() {
 }
 
 
-
 /**
  * msyql 生成文件
  * @param {[]} templates 生产的模板信息
@@ -75,23 +75,40 @@ function queryMysql(templates) {
  */
 function outputFile(table,fieids,templates){
     templates.forEach(t=>{
+        var thclassName = tool.toHump(table.tableName)
+        var BgthclassName = tool.首字母转大写(thclassName)
         var fileobje ={
-            BigclassName:tool.首字母转大写(table.tableName),
-            className:table.tableName, // 类名
+            classNameAddtext:BgthclassName+t.addtext, // 表名转驼峰首字母大写追加文件类型
+            BigclassName: BgthclassName, //表名转驼峰首字母大写
+            className: table.tableName, // 表名
+            thclassName: thclassName, //表名转驼峰
             classCaption:table.tableDirections, // 类注释
             packageName:t.packageName, // 包名
             PRI:tool.getPRI(fieids), //主键字段信息
             fields:fieids,  // 所有字段 [] 数组形式
             type:t.type // 语言
         }
-        var res = getdir(t.path)
-        res.then((fun) => {
-            var text = fun(fileobje) // 调用模板生成字符串
-            filetool.createFile(text,t.Pathdiameter,fileobje.BigclassName+t.addtext,t.suffix) // 生成文件
-        }).catch((err) => {
-            console.log(err)
-            console.log(t.path + "生成时发生错误")
-        })
+        if(t.tftype == 1){
+            var res = getdir(t.path)
+            res.then((fun) => {
+                var text = fun(fileobje) // 调用模板生成字符串
+                filetool.createFile(text,t.Pathdiameter,fileobje.classNameAddtext,t.suffix) // 生成文件
+            }).catch((err) => {
+                console.log(err)
+                console.log(t.path + "生成时发生错误")
+            })
+        }else{
+            try{
+                var reslet = {
+                    tf: fileobje
+                }
+                var text = template(itempath+"\\"+t.path, reslet);
+                filetool.createFile(text,t.Pathdiameter,fileobje.classNameAddtext,t.suffix) // 生成文件
+            }catch(e){
+                console.log("模板调用失败：",e)
+            }
+            
+        }
     })
 }
 /**
