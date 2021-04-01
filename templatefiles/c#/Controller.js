@@ -1,8 +1,8 @@
 
 module.exports = function(entityobj){
 
-    var typeTostring = require('../../utils/TypeConversion')
-    var IdType = typeTostring(entityobj.idobj.字段类型,entityobj.type)
+    var typeTostr = require('../../utils/TypeConversion')
+    var IdType = typeTostr.typeText(entityobj.idobj.字段类型,entityobj.type)
       return `
 using Coldairarrow.Entity.Base_Manage;
 using Coldairarrow.Entity.Entity;

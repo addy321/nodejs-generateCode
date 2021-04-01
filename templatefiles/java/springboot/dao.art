@@ -18,7 +18,7 @@ public interface {{tf.classNameAddtext}} {
 
     int up{{tf.BigclassName}}({{tf.BigclassName}} data);
 
-    {{tf.BigclassName}} get{{tf.BigclassName}}(@Param("id") Integer {{tf.PRI.COLUMN_NAME}});
+    {{tf.BigclassName}} get{{tf.BigclassName}}(@Param("id") Integer {{tf.PRI.Fieldname}});
     
     int get{{tf.BigclassName}}Count(); 
 }

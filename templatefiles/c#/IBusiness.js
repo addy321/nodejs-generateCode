@@ -6,12 +6,12 @@ entityobj.type = 语言类型（文件的后缀）
  */
 module.exports = function(entityobj){
 
-    var typeTostring = require('../../utils/TypeConversion')
+    var typeTostr = require('../../utils/TypeConversion')
 
     var entityName = entityobj.className
     // 获取主键字段和类型 
     // 转换类型
-    var IdType = typeTostring(entityobj.idobj.字段类型,entityobj.type)
+    var IdType = typeTostr.typeText(entityobj.idobj.字段类型,entityobj.type)
     
             return `
 using Coldairarrow.Entity.Entity;

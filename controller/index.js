@@ -33,10 +33,10 @@ router.get('/items', function (req, res) {
 })
 
 /**
- * mysql数据库连接
+ * 数据库连接
  */
 router.get('/mysqlConn', function (req, res) {
-    jsonutil.getJSONFile("/jsonConfig/mysqlConn.json", function (err,JSONData) {
+    jsonutil.getJSONFile("/jsonConfig/sqlConn.json", function (err,JSONData) {
         var data = {
             conns: JSONData
         }
@@ -45,17 +45,18 @@ router.get('/mysqlConn', function (req, res) {
 })
 
 /**
- * 编辑mysql数据连接配置
+ * 编辑数据连接配置
  */
 router.post('/editmysqlConn', function (req, res) {
     var param = req.body
-    jsonutil.getJSONFile("/jsonConfig/mysqlConn.json", function (err,JSONData) {
+    param.port = param.port * 1
+    jsonutil.getJSONFile("/jsonConfig/sqlConn.json", function (err,JSONData) {
         for (var i in JSONData) {
             if (param.id == JSONData[i].id) {
                 JSONData[i] = param
             }
         }
-        jsonutil.setJSONFile('/jsonConfig/mysqlConn.json', JSONData)
+        jsonutil.setJSONFile('/jsonConfig/sqlConn.json', JSONData)
         res.send("success")
     })
 })
@@ -223,7 +224,7 @@ router.post('/saveTemplateConfig', function (req, res) {
 router.post('/saveitem', function (req, res) {
     var data = req.body
     data.filetype = data.filetype || []
-    if(data.filetype && data.filetype.length == 1){
+    if((data.filetype instanceof Array) == false){
         data.filetype = [data.filetype] 
     }
     if(data.id){

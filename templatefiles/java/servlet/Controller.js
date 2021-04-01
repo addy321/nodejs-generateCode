@@ -31,8 +31,8 @@ public class ${entityobj.BigclassName}Controller extends BaseServlet {
 
 	public void queryData(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String ${idobj.COLUMN_NAME} = (String) request.getAttribute("${idobj.COLUMN_NAME}");
-			${entityobj.BigclassName} ${entityobj.className} = ${entityobj.className}Dao.queryData(${idobj.COLUMN_NAME});
+			String ${idobj.Fieldname} = (String) request.getAttribute("${idobj.Fieldname}");
+			${entityobj.BigclassName} ${entityobj.className} = ${entityobj.className}Dao.queryData(${idobj.Fieldname});
 			writeValue(new ResultUtil().getSuccessResult(${entityobj.className}), response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,8 +68,8 @@ public class ${entityobj.BigclassName}Controller extends BaseServlet {
 	
 	public void DelData(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String ${idobj.COLUMN_NAME} = (String) request.getAttribute("${idobj.COLUMN_NAME}");
-			int res = ${entityobj.className}Dao.delete(${idobj.COLUMN_NAME});
+			String ${idobj.Fieldname} = (String) request.getAttribute("${idobj.Fieldname}");
+			int res = ${entityobj.className}Dao.delete(${idobj.Fieldname});
 			ResultUtil rUtil = new ResultUtil();
 			ResultModel resultModel = res> 0 ?rUtil.getSuccessResult():rUtil.getFailResult();
 			writeValue(resultModel, response);

@@ -1,0 +1,26 @@
+using Newtonsoft.Json;
+using RedEnvelopes.Core.util;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+{{tf.packageName}}
+{
+    [Table("{{tf.className}}")]
+    public class {{tf.classNameAddtext}}
+    {
+        /// <summary>
+        /// {{tf.PRI.FieldSM}}
+        /// </summary>
+        [Key]{{if tf.PRI.dataType == 'long'}}
+        [JsonConverter(typeof(NumberConverter), NumberConverterShip.Int64)] //避免精度丢失{{/if}}
+        public {{tf.PRI.dataType}} {{tf.PRI.Fieldname}} { get; set; }
+        {{each tf.fields field index}}{{if field.FieldPK != 'true'}}/// <summary>
+        /// {{field.FieldSM}}
+        /// </summary>
+        public {{ field.FieldType,'c#' | typeToString}}{{if field.FieldISNULL == 'true'}}{{if field.FieldType != 'nvarchar' && field.FieldType != 'varchar'}}?{{/if}}{{/if}} {{field.Fieldname}} { get; set; }{{/if}}
+        {{/each}}
+    }
+}

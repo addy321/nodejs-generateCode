@@ -13,6 +13,9 @@
     top: 10px;
     margin-left: 10px;
 }
+.labletitle{
+    margin-left: 30px;
+}
 </style>
 {{ /block}}
 
@@ -21,20 +24,34 @@
     <div class="page-header">
         <h3>所有表</h3>
     </div>
+    <div style="margin-top: 20px;" class="templates">
+        <h3>按照项目生成 <button class='btn btn-sm' type='button' onclick='itemCode()'>生成代码</button></h3>
+        {{each items item index}}
+        <label class="labletitle"><a href="/getItem?id={{ item.id }}">{{item.name}}</a></label><input type="radio" name="initem" value="{{item.id}}">
+        {{/each}}
+        <h3>按照模板生成 <button class='btn btn-sm' type='button' onclick='TemplateCode()'>生成代码</button></h3>
+        {{each templates item index}}
+        <label class="labletitle"><a href="/getTemplateConfig?id={{ item.id }}">{{item.name}}</a></label><input type="checkbox" name="intemplates" value="{{item.id}}">
+        {{/each}}
+    </div>
     {{each tables table index}}
     <div style="margin: 20px 0px;">
+        <input type="checkbox" name="tableName" value="{{table.tableName}}" sm='{{table.tableDirections}}'>
         表名：<a href="javascript:void(0);"> {{table.tableName }}</a>
         <span style="margin-left: 20px;">表注释：{{ table.tableDirections }}</span>
         <button class="btn btn-sm" type="button" onclick="showfieids('{{ index }}','{{table.tableName}}')">展开字段</button>
-        <button class="btn btn-sm" type="button" onclick="tableCode({{table}})">生成代码</button>
         <!-- 响应式表格 .table-responsive -->
-        <div class="table-responsive fieidstable{{index}}" class="">
+        <div class="table-responsive fieidstable{{index}}">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>备注</th>
-                        <th>字段名</th>
+                        <th>排序列</th>
+                        <th>字段名称</th>
+                        <th>主键</th>
                         <th>字段类型</th>
+                        <th>是否可以为null</th>
+                        <th>默认值</th>
+                        <th>字段说明</th>
                     </tr>
                 </thead>
                 <tbody class="tbody{{index}}">
@@ -42,7 +59,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
     <hr>
     {{/each}}
@@ -51,51 +67,107 @@
 {{ block 'script' }}
 <script>
 var tableshow = 0
+var ajaxjz = false
 function showfieids(index,tableName){
     if(tableshow == 1){
         tableshow = 0
         $('.fieidstable'+index).hide()
         return
     }
+    if(ajaxjz == true){
+        return
+    }
+    ajaxjz = true
     $.ajax({
         url: "/allTablefieids?tableName="+tableName,
         dataType: "json", 
         async: true, 
         type: "get", 
         success: function (fieids) { 
+            ajaxjz = false
             tableshow = 1
             var tabletext = ""
             fieids.forEach(fieid => {
-                tabletext+="<tr><td>"+fieid.COLUMN_COMMENT+"</td> <td>"+fieid.COLUMN_NAME+"</td> <td>"+fieid.DATA_TYPE+"</td>  </tr>"
+                tabletext+=(`<tr><td>${fieid.Fieldcolorder}</td><td>${fieid.Fieldname}</td>
+                    <td>${fieid.FieldPK}</td><td>${fieid.FieldType}</td>
+                    <td>${fieid.FieldISNULL}</td><td>${fieid.FieldMR}</td>
+                    <td>${fieid.FieldSM}</td></tr>`)
             });
             $('.tbody'+index).html(tabletext)
             $('.fieidstable'+index).show()
         },
         error: function (errorInfo) {
+            ajaxjz = false
             console.log(errorInfo)
             alert("异常信息，稍后重试");
         }
     });
 }
-function tableCode(tableobj){
-    console.log(tableobj)
+
+function itemCode(){
+    var itemid = $("input[name='initem']:checked").val()
+    var tableNames = []
+    $("input[name='tableName']:checked").each(function(item){
+        var t = {tableName:$(this).val(),tablesm:$(this).attr('sm')}
+        tableNames.push(t)
+    })
+    if(itemid == undefined || tableNames.length == 0){
+        return
+    }
+    var data  = {"itemid":itemid,"tableNames": JSON.stringify(tableNames)}
     var res=confirm("确定生成？");
-    if (res==true)
-    {
-       $.ajax({
-           url: "/tableCode",
-           dataType: "text", 
-           async: true, 
-           data: tableobj,
-           type: "post", 
-           success: function (res) { 
-               alert(res);
-           },
-           error: function (errorInfo) {
-               console.log(errorInfo)
-               alert("异常信息，稍后重试");
-           }
-       });
+    if (res==true){
+        $.ajax({
+            url: "/itemgenerateCode",
+            dataType: "text", 
+            async: true, 
+            data: data,
+            type: "post", 
+            success: function (res) { 
+                alert(res);
+            },
+            error: function (errorInfo) {
+                console.log(errorInfo)
+                alert("异常信息，稍后重试");
+            }
+        });
+    }
+}
+
+function TemplateCode(type,index,tableobj){ 
+    
+    var intemplates = []
+    $("input[name='intemplates']:checked").each(function(item){
+        intemplates.push($(this).val())
+    })
+
+    var tableNames = []
+    $("input[name='tableName']:checked").each(function(item){
+        var t = {tableName:$(this).val(),tablesm:$(this).attr('sm')}
+        tableNames.push(t)
+    })
+
+    if(intemplates.length == 0 || tableNames.length == 0){
+        return
+    }
+    var res=confirm("确定生成？");
+    if (res==true){
+        console.log(intemplates)
+        console.log(tableNames)
+        $.ajax({
+            url: "/templatesCode",
+            dataType: "text", 
+            async: true, 
+            data: {intemplates:JSON.stringify(intemplates),tableNames:JSON.stringify(tableNames)},
+            type: "post", 
+            success: function (res) { 
+                alert(res);
+            },
+            error: function (errorInfo) {
+                console.log(errorInfo)
+                alert("异常信息，稍后重试");
+            }
+        });
     }
 }
 </script>

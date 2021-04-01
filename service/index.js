@@ -3,6 +3,7 @@ var tool = require('../utils/tool')
 var getdir = require('../utils/load_dir')
 var connectquery = require('../dao/connectquery')
 var jsonutil = require('../utils/jsontool/index')
+var typeTostr = require('../utils/TypeConversion')
 var itempath = process.cwd()
 var fs = require('fs')
 var template = require('art-template');
@@ -68,6 +69,36 @@ function queryMysql(templates) {
 }
 
 /**
+ * 根据选中模板和选中表生成
+ * @param {[]} templateids 模板id
+ * @param {[]} tableobj 选中的表
+ */
+ function selectedTB(templateids,tableobj) {
+    // 所有表名和注释
+    connectquery.MysqlallTable(tables => {
+        jsonutil.getJSONFile("/jsonConfig/templateConfig.json", function (err,templateConfig) {
+            var tlist = []
+             // 获取对应的模板
+            templateids.forEach(tid=>{
+                for (var i in templateConfig) {
+                    if (tid == templateConfig[i].id) {
+                        tlist.push(templateConfig[i])
+                        templateConfig.splice(i,1);
+                        break
+                    }
+                }
+            })
+            tableobj.forEach(table => {
+                // 查询表下面的所有字段信息
+                connectquery.MysqlallField(table.tableName, fieids => {
+                    outputFile(table, fieids,tlist)
+                })
+            })
+        })
+    })
+}
+
+/**
  * 调用模板生成代码
  * @param {{}} table 表的信息
  * @param {[]} fieids  表中字段信息
@@ -84,7 +115,7 @@ function outputFile(table,fieids,templates){
             thclassName: thclassName, //表名转驼峰
             classCaption:table.tableDirections, // 类注释
             packageName:t.packageName, // 包名
-            PRI:tool.getPRI(fieids), //主键字段信息
+            PRI:tool.getPRI(fieids,t.type), //主键字段信息
             fields:fieids,  // 所有字段 [] 数组形式
             type:t.type // 语言
         }
@@ -102,6 +133,7 @@ function outputFile(table,fieids,templates){
                 var reslet = {
                     tf: fileobje
                 }
+                template.defaults.imports.typeToString=typeTostr.typeText
                 var text = template(itempath+"\\"+t.path, reslet);
                 filetool.createFile(text,t.Pathdiameter,fileobje.classNameAddtext,t.suffix) // 生成文件
             }catch(e){
@@ -146,5 +178,5 @@ function useTemplatefiles(itemid,callback){
 }
 
 module.exports = {
-    main_a,useTemplatefiles,outputFile,startTemplateConfig
+    main_a,useTemplatefiles,outputFile,startTemplateConfig,selectedTB
 }

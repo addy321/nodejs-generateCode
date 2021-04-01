@@ -1,14 +1,18 @@
 
-/*
-获取主键的名字和主键的类型
-array = 所有字段
-tableName = 表名
-用于mysql
+var typeTostr = require('../utils/TypeConversion')
+
+/**
+ * 获取主键的名字和主键的类型
+ * @param {[]} array 所有字段
+ * @param {String} type 语言类型
+ * @returns {} 主键对象
  */
-function getPRI(array) {
+function getPRI(array,type) {
     for (var i in array) {
-        if (array[i].COLUMN_KEY.indexOf('PRI') != -1) {
-            return array[i]
+        if (array[i].FieldPK.indexOf('PRI') != -1 || array[i].FieldPK.indexOf('true') != -1) {
+            var pri = array[i]
+            pri.dataType = typeTostr.typeText(pri.FieldType,type)
+            return pri
         }
     }
 }

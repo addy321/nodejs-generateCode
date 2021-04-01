@@ -1,0 +1,50 @@
+using Coldairarrow.Business._03IBusiness.GoldenButler;
+using Coldairarrow.Entity.GoldenButler;
+using Coldairarrow.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+{{tf.packageName}}
+{
+    public class {{tf.className}}Business : BaseBusiness<{{tf.className}}>, I{{tf.className}}Business, IDependency
+    {
+        public {{tf.className}}Business():base("VipGatherConnection")
+        {
+
+        }
+        public AjaxResult DeleteData(List<string> ids)
+        {
+            Delete(ids);
+            return Success();
+        }
+
+        public List<{{tf.className}}> GetDataList(Pagination pagination, string companyStyle)
+        {
+            var q = GetIQueryable();
+            var where = LinqHelper.True<{{tf.className}}>();
+            //筛选
+            if (!string.IsNullOrEmpty(companyStyle))
+                where = where.And(a => a.CompanyStyle == companyStyle);
+            return q.Where(where).GetPagination(pagination).ToList();
+        }
+
+        public {{tf.className}} GetTheData(string id)
+        {
+            return GetEntity(id);
+        }
+
+        public AjaxResult InsertData({{tf.className}} entity)
+        {
+            Insert(entity);
+            return Success();
+        }
+
+        public AjaxResult UpdateData({{tf.className}} entity)
+        {
+            Update(entity);
+            return Success();
+        }
+    }
+}

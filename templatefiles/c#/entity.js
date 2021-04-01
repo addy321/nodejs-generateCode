@@ -1,7 +1,7 @@
 
 module.exports = function(entityobj){
 
-    var typeTostring = require('../../utils/TypeConversion')
+    var typeTostr = require('../../utils/TypeConversion')
     var tool = require('../../utils/tool')
 
     // 所有字段拼接
@@ -13,7 +13,7 @@ module.exports = function(entityobj){
         /// </summary>
         [Column("${fieldObje.字段名}")]${fieldObje.约束.indexOf('PRI') != -1?`
         [Key]`:''}
-        public ${typeTostring(fieldObje.字段类型,entityobj.type)} ${tool.toHump(fieldObje.字段名)} { get; set; }
+        public ${typeTostr.typeText(fieldObje.字段类型,entityobj.type)} ${tool.toHump(fieldObje.字段名)} { get; set; }
     `
       });
       return `

@@ -1,0 +1,46 @@
+using Coldairarrow.Entity.GoldenButler;
+using Coldairarrow.Util;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+{{tf.packageName}}
+{
+    public interface I{{tf.classNameAddtext}}
+    {
+        /// <summary>
+        /// 列表(分页查询)
+        /// </summary>
+        /// <param name="pagination">分页参数</param>
+        /// <param name="companyStyle">公司后缀</param>
+        /// <returns></returns>
+        List<{{tf.BigclassName}}> GetDataList(Pagination pagination, string companyStyle);
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="{{tf.PRI.Fieldname}}">主键{{tf.PRI.Fieldname}}</param>
+        /// <returns></returns>
+        {{tf.BigclassName}} GetTheData({{tf.PRI.dataType}} {{tf.PRI.Fieldname}});
+
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity">新增数据</param>
+        /// <returns></returns>
+        AjaxResult InsertData({{tf.BigclassName}} entity);
+
+        /// <summary>
+        /// 修改实体
+        /// </summary>
+        /// <param name="entity">修改数据</param>
+        /// <returns></returns>
+        AjaxResult UpdateData({{tf.BigclassName}} entity);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids">主键id</param>
+        /// <returns></returns>
+        AjaxResult DeleteData(List<{{tf.PRI.dataType}} > ids);
+    }
+}

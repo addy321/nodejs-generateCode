@@ -15,7 +15,9 @@
     {{each items item index}}
     <div>
         <a href="/getItem?id={{ item.id }}">{{ item.name }}</a>
-        <a style="float: right;" href="/delitem?id={{ item.id }}">删除</a>
+        <a style="float: right;margin-left: 10px;" href="/delitem?id={{ item.id }}"><span class="label label-danger td-span">删除</span></a>
+        {{if item.status == '1'}}<a style="float: right;margin-left: 10px;"><span class="label label-success td-span">启用</span></a>{{/if}}
+        {{if item.status == '0'}} <a style="float: right;margin-left: 10px;"><span class="label label-danger td-span">停用</span></a>{{/if}}
     </div>
     <hr>
     {{/each}}

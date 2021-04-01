@@ -1,7 +1,7 @@
 var d = function(entityobj){
     var itempath = process.cwd()
     var tool = require(itempath+'/utils/tool')
-    var typeTostring = require(itempath+'/utils/TypeConversion')
+    var typeTostr = require(itempath+'/utils/TypeConversion')
     
     var 映射字段字符拼接 = ''
     var 字段字符拼接 = ''
@@ -11,29 +11,29 @@ var d = function(entityobj){
     var set字符拼接 =''
 
     entityobj.fields.forEach(字段=>{
-                var 大写开头字段 = tool.首字母转大写(字段.COLUMN_NAME)
-                字段字符拼接+=字段.COLUMN_NAME+','
+                var 大写开头字段 = tool.首字母转大写(字段.Fieldname)
+                字段字符拼接+=字段.Fieldname+','
                 映射字段字符拼接+=`
         values.add(data.get${大写开头字段}());`
                 问号 +='?,'
-                if(字段.COLUMN_KEY != "PRI")修改字符 +=`
+                if(字段.FieldPK != "PRI")修改字符 +=`
         if(data.get${大写开头字段}()!=null){
-            sql.append("${字段.COLUMN_NAME}=?,");
+            sql.append("${字段.Fieldname}=?,");
             values.add(data.get${大写开头字段}());
         }
                 `
-                var action = `rs.getString("${字段.COLUMN_NAME}")`
-                if(字段.DATA_TYPE.indexOf("int")  != -1){
-                    action = `rs.getInt("${字段.COLUMN_NAME}")`
+                var action = `rs.getString("${字段.Fieldname}")`
+                if(字段.FieldType.indexOf("int")  != -1){
+                    action = `rs.getInt("${字段.Fieldname}")`
                 }
-                if(字段.DATA_TYPE.indexOf("date")  != -1){
-                    action = `rs.getDate("${字段.COLUMN_NAME}")`
+                if(字段.FieldType.indexOf("date")  != -1){
+                    action = `rs.getDate("${字段.Fieldname}")`
                 }
-                if(字段.DATA_TYPE.indexOf("decimal")  != -1){
-                    action = `rs.getDouble("${字段.COLUMN_NAME}")`
+                if(字段.FieldType.indexOf("decimal")  != -1){
+                    action = `rs.getDouble("${字段.Fieldname}")`
                 }
                 set字符拼接 +=`
-            data.set${tool.首字母转大写(字段.COLUMN_NAME)}(${action});`
+            data.set${tool.首字母转大写(字段.Fieldname)}(${action});`
             })
             字段字符拼接 = tool.字符串去除最后一个字符(字段字符拼接)
             问号 = tool.字符串去除最后一个字符(问号)
@@ -41,7 +41,7 @@ var d = function(entityobj){
             
     var 是否添加操作时间 = false
     var idobj = entityobj.PRI
-    var IdType = typeTostring(idobj.DATA_TYPE,entityobj.type)
+    var IdType = typeTostr.typeText(idobj.FieldType,entityobj.type)
 
             return `
 ${entityobj.packageName}
@@ -69,10 +69,10 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
     /*
     * 删除
    */ 
-    public int delete(String ${idobj.COLUMN_NAME}) throws Exception {
-        String sql="delete from ${entityobj.className} where ${idobj.COLUMN_NAME}=?";
+    public int delete(String ${idobj.Fieldname}) throws Exception {
+        String sql="delete from ${entityobj.className} where ${idobj.Fieldname}=?";
         List<Object> values=new ArrayList<Object>(1);
-            values.add(${idobj.COLUMN_NAME});
+            values.add(${idobj.Fieldname});
         return executeUpdate(sql, values);
     }
 
@@ -87,8 +87,8 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
         sql.append("操作时间=?");
         values.add(new Date());`:''}
         
-        sql.append(" where ${idobj.COLUMN_NAME}=?");
-        values.add(data.get${tool.首字母转大写(idobj.COLUMN_NAME)}());
+        sql.append(" where ${idobj.Fieldname}=?");
+        values.add(data.get${tool.首字母转大写(idobj.Fieldname)}());
         
         return executeUpdate(sql.toString(), values);
     }
@@ -152,11 +152,11 @@ public class ${entityobj.BigclassName}Dao extends daoTemplate{
     /*
     * 根据主键查询
    */ 
-    public ${entityobj.BigclassName} queryData(String ${idobj.COLUMN_NAME}) throws Exception {
+    public ${entityobj.BigclassName} queryData(String ${idobj.Fieldname}) throws Exception {
     	if(id == null) {
     		return null;
     	}
-    	String sql="select * from ${entityobj.className} where ${idobj.COLUMN_NAME} = ?";
+    	String sql="select * from ${entityobj.className} where ${idobj.Fieldname} = ?";
     	ResultSet rs=null;
     	ArrayList<Object> values=new ArrayList<Object>(1);
     	values.add(id);

@@ -20,8 +20,11 @@ function getJSONFile(path,callback){
  */
 function setJSONFile(path,data){
     var text = JSON.stringify(data)
+    if(text == null || text == ''){
+        throw err("内容不能为空")
+    }
     fs.writeFile(itempath + path, text, 'utf8', (err) => {
-        if (err) throw err;
+        if (err) console.log(err);
     });
 }
 
@@ -29,8 +32,8 @@ function setJSONFile(path,data){
  * 查询mysql 可用的连接配置
  * @param {Function} callback 
  */
-function getMysqlJSON(callback){
-    getJSONFile('/jsonConfig/mysqlConn.json',function(err,JSONData){
+function getSqlJSON(callback){
+    getJSONFile('/jsonConfig/sqlConn.json',function(err,JSONData){
         var data = null;
         JSONData.forEach(x => {
             if (x.status == 1) {
@@ -44,5 +47,5 @@ function getMysqlJSON(callback){
 
 
 module.exports = {
-    getMysqlJSON,getJSONFile,setJSONFile
+    getSqlJSON,getJSONFile,setJSONFile
 }

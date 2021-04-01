@@ -1,9 +1,9 @@
 
 module.exports = function(entityobj){
 
-    var typeTostring = require('../../utils/TypeConversion')
+    var typeTostr = require('../../utils/TypeConversion')
     var tool = require('../../utils/tool') 
-    var IdType = typeTostring(entityobj.idobj.字段类型,entityobj.type)
+    var IdType = typeTostr.netType(entityobj.idobj.字段类型)
       return `
 using Coldairarrow.Business;
 using Coldairarrow.Entity.Entity;

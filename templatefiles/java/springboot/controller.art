@@ -1,0 +1,50 @@
+{{tf.packageName}}
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cms.entity.{{tf.BigclassName}};
+import com.cms.service.{{tf.BigclassName}}Service;
+
+@ResponseBody
+@Controller
+@RequestMapping("/{{tf.thclassName}}")
+public class {{tf.classNameAddtext}} {
+
+	@Autowired
+	private {{tf.BigclassName}}Service {{tf.thclassName}}Service;
+	
+	@RequestMapping("{{tf.BigclassName}}s")
+	public List<{{tf.BigclassName}}> ge{{tf.BigclassName}}s(int pageIndex,int pageRows) {
+		return {{tf.thclassName}}Service.get{{tf.BigclassName}}s(pageIndex, pageRows);
+	}
+	
+	@RequestMapping("add{{tf.BigclassName}}")
+	public int add{{tf.BigclassName}}({{tf.BigclassName}} data) {
+		return {{tf.thclassName}}Service.add{{tf.BigclassName}}(data);
+	}
+
+	@RequestMapping("del{{tf.BigclassName}}")
+	public int del{{tf.BigclassName}}(int id) {
+		return {{tf.thclassName}}Service.del{{tf.BigclassName}}(id);
+	}
+
+	@RequestMapping("up{{tf.BigclassName}}")
+	public int up{{tf.BigclassName}}({{tf.BigclassName}} data) { 
+		return {{tf.thclassName}}Service.up{{tf.BigclassName}}(data);
+	}
+
+	@RequestMapping("get{{tf.BigclassName}}")
+	public {{tf.BigclassName}} get{{tf.BigclassName}}(Integer id) {
+		return {{tf.thclassName}}Service.get{{tf.BigclassName}}(id);
+	}
+
+	@RequestMapping("get{{tf.BigclassName}}Count")
+	public int get{{tf.BigclassName}}Count() {
+		return {{tf.thclassName}}Service.get{{tf.BigclassName}}Count();
+	}
+}

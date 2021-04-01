@@ -1,6 +1,6 @@
 var e = function(entityobj){
     var itempath = process.cwd()
-    var typeTostring = require(itempath+'/utils/TypeConversion')
+    var typeTostr = require(itempath+'/utils/TypeConversion')
     var tool = require(itempath+'/utils/tool')
     
     // 所有字段拼接
@@ -14,24 +14,24 @@ var e = function(entityobj){
 
         entityobj.fields.forEach(fieldObje => {
         // 获取类型
-        var fieldString = typeTostring(fieldObje.DATA_TYPE,entityobj.type)
+        var fieldString = typeTostr.typeText(fieldObje.FieldType,entityobj.type)
         
         //拼接字段
             fieldtext1 += `
-    //${fieldObje.COLUMN_COMMENT}
-    private ${fieldString} ${tool.toHump(fieldObje.COLUMN_NAME)};
+    //${fieldObje.FieldSM}
+    private ${fieldString} ${tool.toHump(fieldObje.Fieldname)};
         `
         // getset 方法拼接
         fieldtext2 += `
-    public ${fieldString} get${tool.toHump(tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME)))}() {
-        return ${tool.toHump(fieldObje.COLUMN_NAME)};
+    public ${fieldString} get${tool.toHump(tool.toHump(tool.首字母转大写(fieldObje.Fieldname)))}() {
+        return ${tool.toHump(fieldObje.Fieldname)};
     }
-    public void set${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))}(${fieldString} ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))}) {
-        this.${tool.toHump(fieldObje.COLUMN_NAME)} = ${tool.toHump(tool.首字母转大写(fieldObje.COLUMN_NAME))};
+    public void set${tool.toHump(tool.首字母转大写(fieldObje.Fieldname))}(${fieldString} ${tool.toHump(tool.首字母转大写(fieldObje.Fieldname))}) {
+        this.${tool.toHump(fieldObje.Fieldname)} = ${tool.toHump(tool.首字母转大写(fieldObje.Fieldname))};
     }
             `
         // tostring 方法拼接
-        fieldtext3 += `${tool.toHump(fieldObje.COLUMN_NAME)}=" + ${tool.toHump(fieldObje.COLUMN_NAME)} + ",`
+        fieldtext3 += `${tool.toHump(fieldObje.Fieldname)}=" + ${tool.toHump(fieldObje.Fieldname)} + ",`
 
         });
 
